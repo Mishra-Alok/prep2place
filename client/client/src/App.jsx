@@ -33,7 +33,7 @@ import EnhanceResume from './pages/EnhanceResume';
 import AdditionalInterview from './components/AdditionalInterview';
 import MachineCode from './pages/MachineCode';
 import Social from './pages/Social';
-import LinkedInEnhancementPage from './pages/Linkedin';
+import LinkedInEnhancementPage from './pages/LinkedIn';
 import GitHubEnhancementPage from './pages/Github';
 import LeetCodeEnhancementPage from './pages/Leetcode';
 import Twitter from './pages/Twitter';
