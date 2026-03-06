@@ -23,6 +23,11 @@ app.use(cors({
   origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true,
 }));
+
+app.get("/", (req, res) => {
+  res.send("Prep2Place API is running...");
+});
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Session (required for passport)
