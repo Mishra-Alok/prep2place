@@ -7,7 +7,7 @@ import SignIn from './pages/SignIn';
 import OAuthCallback from './pages/OAuthCallback';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import Index from './pages/Index';
+import Index from './pages/index';
 import Community from './pages/Community';
 import Esmoai from './pages/Esmoai';
 import Roadmap from './pages/Roadmap';
