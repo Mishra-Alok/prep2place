@@ -89,11 +89,9 @@ const MachineCode = () => {
 
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
-    if (!selectedQuestion) {
-      setCode(defaultTemplates[newLang] || '');
-      setOutput('');
-      setError('');
-    }
+    setCode(defaultTemplates[newLang] || '');
+    setOutput('');
+    setError('');
   };
 
   const runCode = async () => {
@@ -164,11 +162,11 @@ const MachineCode = () => {
             value={language}
             onChange={(e) => handleLanguageChange(e.target.value)}
           >
-            <option value="python">Python</option>
-            <option value="javascript">Node.js</option>
-            <option value="java">Java 17</option>
-            <option value="cpp">C++</option>
-            <option value="c">C</option>
+            <option value="python" className="dark:bg-slate-800 dark:text-slate-200">Python</option>
+            <option value="javascript" className="dark:bg-slate-800 dark:text-slate-200">Node.js</option>
+            <option value="java" className="dark:bg-slate-800 dark:text-slate-200">Java 17</option>
+            <option value="cpp" className="dark:bg-slate-800 dark:text-slate-200">C++</option>
+            <option value="c" className="dark:bg-slate-800 dark:text-slate-200">C</option>
           </select>
 
           <button

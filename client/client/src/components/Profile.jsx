@@ -370,13 +370,22 @@ export default function CodingProfile() {
   const fetchGfgStats = async (username) => {
     try {
       setGfgError(false);
-      // Using an unofficial geeksforgeeks API wrapper
-      const response = await axios.get(`https://geeks-for-geeks-api.vercel.app/${username}`, { timeout: 8000 });
-      // The API returns an object. If invalid user, it usually throws 500 or returns empty data.
-      if (!response.data || Object.keys(response.data).length === 0 || response.data.error) {
-        throw new Error("Invalid username");
+      try {
+        // Using an unofficial geeksforgeeks API wrapper
+        const response = await axios.get(`https://geeks-for-geeks-api.vercel.app/${username}`, { timeout: 8000 });
+        if (!response.data || Object.keys(response.data).length === 0 || response.data.error) {
+          throw new Error("Invalid username");
+        }
+        setGfgStats(response.data);
+      } catch (primaryError) {
+        console.warn("Primary GeeksForGeeks API failed, trying secondary...", primaryError.message);
+        // Fallback to secondary API
+        const response2 = await axios.get(`https://gfg-api.tashif.codes/api/user/${username}`, { timeout: 8000 });
+        if (!response2.data || Object.keys(response2.data).length === 0 || response2.data.error || response2.data.status !== 'success') {
+          throw new Error("Invalid username on secondary API");
+        }
+        setGfgStats(response2.data);
       }
-      setGfgStats(response.data);
     } catch (error) {
       console.error("GeeksForGeeks API failed:", error.message);
       setGfgStats(null);
