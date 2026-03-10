@@ -27,6 +27,7 @@ import {
   Flag,
   Trophy,
   Star,
+  Award,
   Camera as CameraIcon,
   LayoutTemplate,
   Activity,
