@@ -7,16 +7,40 @@ import { useTheme } from '../context/ThemeContext';
 
 const MachineCode = () => {
   const { isDarkMode } = useTheme();
-  const [code, setCode] = useState('function main() {\n    console.log("Hello, World!");\n}\n\nmain();');
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('machineCode_language') || 'javascript';
+  });
+  const [code, setCode] = useState(() => {
+    const saved = localStorage.getItem('machineCode_code');
+    return saved !== null ? saved : 'function main() {\n    console.log("Hello, World!");\n}\n\nmain();';
+  });
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [language, setLanguage] = useState('javascript');
   const [isRunning, setIsRunning] = useState(false);
   const [showQuestions, setShowQuestions] = useState(() => {
     const saved = localStorage.getItem('machineCode_showQuestions');
     return saved !== null ? JSON.parse(saved) : true;
   });
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [selectedQuestion, setSelectedQuestion] = useState(() => {
+    const saved = localStorage.getItem('machineCode_selectedQuestion');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('machineCode_language', language);
+  }, [language]);
+
+  React.useEffect(() => {
+    localStorage.setItem('machineCode_code', code);
+  }, [code]);
+
+  React.useEffect(() => {
+    if (selectedQuestion) {
+      localStorage.setItem('machineCode_selectedQuestion', JSON.stringify(selectedQuestion));
+    } else {
+      localStorage.removeItem('machineCode_selectedQuestion');
+    }
+  }, [selectedQuestion]);
 
   const defaultTemplates = {
     c: '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}',

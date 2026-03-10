@@ -13,9 +13,23 @@ const INITIAL_TASKS = [
 
 export default function Planyourday() {
   const { isDarkMode } = useTheme();
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('planYourDay_tasks');
+    if (savedTasks) {
+      try {
+        return JSON.parse(savedTasks);
+      } catch (e) {
+        return INITIAL_TASKS;
+      }
+    }
+    return INITIAL_TASKS;
+  });
   const [currentDate, setCurrentDate] = useState(new Date());
   const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  React.useEffect(() => {
+    localStorage.setItem('planYourDay_tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const renderCalendarDays = () => {
     const year = currentDate.getFullYear();

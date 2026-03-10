@@ -312,48 +312,39 @@ export default function CodingProfile() {
   };
 
   const fetchLeetcodeStats = async (username) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-
     try {
       setLeetcodeError(false);
-      const response = await axios.get(
-        `https://alfa-leetcode-api.onrender.com/userProfile/${username}`,
-        { signal: controller.signal }
-      );
-      clearTimeout(timeoutId);
+      // Try primary API (fastest and working for this user)
+      const fallbackRes = await axios.get(`https://leetcode-api-faisalshohag.vercel.app/${username}`, {
+        timeout: 10000
+      });
       
-      if (response.data.errors) {
-        throw new Error("Invalid username");
-      }
+      if (fallbackRes.data.errors) throw new Error("Invalid username");
       
-      setLeetcodeStats(response.data);
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.warn("Primary LeetCode API failed, trying fallback...", error.message);
-      if (error.name === 'AbortError' || error.name === 'CanceledError') {
-        // Try fallback immediately without waiting on aborted primary
-      }
+      // Map API to match UI structure
+      setLeetcodeStats({
+        totalSolved: fallbackRes.data.totalSolved,
+        ranking: fallbackRes.data.ranking,
+        easySolved: fallbackRes.data.easySolved,
+        mediumSolved: fallbackRes.data.mediumSolved,
+        hardSolved: fallbackRes.data.hardSolved,
+        totalQuestions: fallbackRes.data.totalQuestions || 3300,
+        totalEasy: fallbackRes.data.totalEasy || 800,
+        totalMedium: fallbackRes.data.totalMedium || 1700,
+        totalHard: fallbackRes.data.totalHard || 800
+      });
+    } catch (primaryError) {
+      console.warn("Primary LeetCode API failed, trying secondary...", primaryError.message);
       try {
-        const fallbackRes = await axios.get(`https://leetcode-api-faisalshohag.vercel.app/${username}`, {
-          timeout: 8000
+        const response = await axios.get(`https://alfa-leetcode-api.onrender.com/userProfile/${username}`, {
+          timeout: 45000 
         });
-        if (fallbackRes.data.errors) throw new Error("Invalid username");
-        
-        // Map fallback API to match primary API structure so UI doesn't break
-        setLeetcodeStats({
-          totalSolved: fallbackRes.data.totalSolved,
-          ranking: fallbackRes.data.ranking,
-          easySolved: fallbackRes.data.easySolved,
-          mediumSolved: fallbackRes.data.mediumSolved,
-          hardSolved: fallbackRes.data.hardSolved,
-          totalQuestions: fallbackRes.data.totalQuestions || 3300,
-          totalEasy: fallbackRes.data.totalEasy || 800,
-          totalMedium: fallbackRes.data.totalMedium || 1700,
-          totalHard: fallbackRes.data.totalHard || 800
-        });
-      } catch (fallbackError) {
-        console.error("All Leetcode APIs failed", fallbackError.message);
+        if (response.data.errors) {
+          throw new Error("Invalid username");
+        }
+        setLeetcodeStats(response.data);
+      } catch (secondaryError) {
+        console.error("All LeetCode APIs failed:", secondaryError.message);
         setLeetcodeStats(null);
         setLeetcodeError(true);
       }
@@ -1847,24 +1838,26 @@ export default function CodingProfile() {
             )}
 
              {/* --- GITHUB CARD --- */}
-             {profileData.socialLinks?.github && (
+             {(profileData.socialLinks?.github || profileData.codingProfile?.hackerrank || profileData.codingProfile?.others) && (
               <div className={`col-span-1 xl:col-span-2 p-5 rounded-2xl border flex flex-col transition-all hover:shadow-md ${isDarkMode ? 'bg-gray-800/40 border-gray-700/50 hover:border-gray-600' : 'bg-white border-gray-200 hover:border-gray-300'}`}>
                  <h4 className={`text-sm font-semibold mb-3 uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Other Linked Profiles</h4>
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className={`flex items-center gap-3 p-3 rounded-xl border flex-1 transition-all ${isDarkMode ? 'bg-gray-800/80 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-                     <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center border shadow-inner">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                     </div>
-                     <div className="min-w-0 flex-1 flex flex-col justify-center h-full">
-                       <p className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} m-0`}>GitHub</p>
-                       <p className={`text-sm font-semibold truncate ${isDarkMode ? 'text-white' : 'text-gray-900'} m-0 leading-tight`}>@{profileData.socialLinks.github}</p>
-                     </div>
-                     <div className="flex justify-end p-2 h-full items-center">
-                        <a href={`https://github.com/${profileData.socialLinks.github}`} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink size={16} className={`hover:text-indigo-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                        </a>
-                      </div>
-                  </div>
+                  {profileData.socialLinks?.github && (
+                    <div className={`flex items-center gap-3 p-3 rounded-xl border flex-1 transition-all ${isDarkMode ? 'bg-gray-800/80 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                       <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center border shadow-inner">
+                          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                       </div>
+                       <div className="min-w-0 flex-1 flex flex-col justify-center h-full">
+                         <p className={`text-[10px] font-medium uppercase tracking-wider ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} m-0`}>GitHub</p>
+                         <p className={`text-sm font-semibold truncate ${isDarkMode ? 'text-white' : 'text-gray-900'} m-0 leading-tight`}>@{profileData.socialLinks.github}</p>
+                       </div>
+                       <div className="flex justify-end p-2 h-full items-center">
+                          <a href={`https://github.com/${profileData.socialLinks.github}`} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink size={16} className={`hover:text-indigo-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                          </a>
+                        </div>
+                    </div>
+                  )}
                   
                   {/* --- OTHER PLATFORMS --- */}
                   {profileData.codingProfile?.hackerrank && (
@@ -1901,19 +1894,21 @@ export default function CodingProfile() {
                   )}
                 </div>
 
-                <div className={`mt-4 p-4 rounded-xl border overflow-hidden ${isDarkMode ? 'bg-gray-800/60 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-                   <p className={`text-[10px] font-medium uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GitHub Contribution Graph</p>
-                  <div className="w-full overflow-x-auto custom-scrollbar">
-                    <div className="min-w-[700px] flex justify-center">
-                      <img 
-                        src={`https://ghchart.rshah.org/${isDarkMode ? '6366f1' : '4f46e5'}/${profileData.socialLinks.github}`} 
-                        alt={`${profileData.socialLinks.github}'s Github chart`}
-                        className={`w-full h-auto max-w-full ${isDarkMode ? 'filter invert hue-rotate-180 brightness-110 contrast-125' : ''}`}
-                        style={{ filter: isDarkMode ? 'invert(1) hue-rotate(180deg) brightness(1.2)' : 'none' }}
-                      />
+                {profileData.socialLinks?.github && (
+                  <div className={`mt-4 p-4 rounded-xl border overflow-hidden ${isDarkMode ? 'bg-gray-800/60 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                     <p className={`text-[10px] font-medium uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GitHub Contribution Graph</p>
+                    <div className="w-full overflow-x-auto custom-scrollbar">
+                      <div className="min-w-[700px] flex justify-center">
+                        <img 
+                          src={`https://ghchart.rshah.org/${isDarkMode ? '6366f1' : '4f46e5'}/${profileData.socialLinks.github}`} 
+                          alt={`${profileData.socialLinks.github}'s Github chart`}
+                          className={`w-full h-auto max-w-full ${isDarkMode ? 'filter invert hue-rotate-180 brightness-110 contrast-125' : ''}`}
+                          style={{ filter: isDarkMode ? 'invert(1) hue-rotate(180deg) brightness(1.2)' : 'none' }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>
