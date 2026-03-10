@@ -532,46 +532,48 @@ export default function CodingProfile() {
   const renderProfileDetailsTab = () => (
     <div className="space-y-8 animate-fadeIn">
       {/* Profile Photo & Summary Section */}
-      <div className={`p-6 md:p-8 rounded-3xl border shadow-lg backdrop-blur-xl transition-all duration-300 ${isDarkMode ? 'bg-[#181824]/60 border-white/5' : 'bg-white/80 border-white shadow-gray-200/50'}`}>
-        <div className="flex justify-between items-center mb-8 border-b pb-4 dark:border-white/10 border-gray-100">
-          <div>
-            <h3 className={`text-xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Edit Identity</h3>
-            <p className="text-sm text-gray-500 font-medium mt-1">Manage your public persona.</p>
+      {isEditing && (
+        <div className={`p-6 md:p-8 rounded-3xl border shadow-lg backdrop-blur-xl transition-all duration-300 ${isDarkMode ? 'bg-[#181824]/60 border-white/5' : 'bg-white/80 border-white shadow-gray-200/50'}`}>
+          <div className="flex justify-between items-center mb-8 border-b pb-4 dark:border-white/10 border-gray-100">
+            <div>
+              <h3 className={`text-xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Edit Identity</h3>
+              <p className="text-sm text-gray-500 font-medium mt-1">Manage your public persona.</p>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row gap-10">
-          <div className="flex-1">
-             <h4 className={`font-semibold text-sm uppercase tracking-widest mb-4 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Avatar Style</h4>
-             <div className="bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10 p-6 rounded-2xl border dark:border-white/5 border-indigo-50/50">
-               <p className="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">Choose an auto-generated stunning avatar to quickly aestheticize your profile if you don't have a photo ready.</p>
-               <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                 {[1, 2, 3, 4, 5, 6].map((num) => {
-                   // Using an aesthetic gradient background for avatars
-                   const bgColors = ['b6e3f4', 'c0aede', 'ffd5dc', 'ffdfbf', 'd1f4ba', 'e0c3fc'];
-                   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${num}&backgroundColor=${bgColors[num-1]}`;
-                   const isSelected = (editForm.profilePic || profileData.profilePic) === avatarUrl;
-                   return (
-                     <button
-                       key={num}
-                       type="button"
-                       onClick={() => handleAvatarSelect(avatarUrl)}
-                       title="Use this avatar"
-                       className={`aspect-square w-full rounded-2xl cursor-pointer hover:-translate-y-1 transition-all duration-300 flex items-center justify-center overflow-hidden border-2 shadow-sm ${
-                         isSelected
-                           ? 'border-indigo-500 ring-4 ring-indigo-500/20 shadow-indigo-500/30'
-                           : 'border-transparent hover:border-indigo-300 dark:hover:border-indigo-500/50'
-                       }`}
-                     >
-                       <img src={avatarUrl} alt={`Avatar ${num}`} className="w-full h-full object-cover" />
-                     </button>
-                   );
-                 })}
+          <div className="flex flex-col md:flex-row gap-10">
+            <div className="flex-1">
+               <h4 className={`font-semibold text-sm uppercase tracking-widest mb-4 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Avatar Style</h4>
+               <div className="bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10 p-6 rounded-2xl border dark:border-white/5 border-indigo-50/50">
+                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">Choose an auto-generated stunning avatar to quickly aestheticize your profile if you don't have a photo ready.</p>
+                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                   {[1, 2, 3, 4, 5, 6].map((num) => {
+                     // Using an aesthetic gradient background for avatars
+                     const bgColors = ['b6e3f4', 'c0aede', 'ffd5dc', 'ffdfbf', 'd1f4ba', 'e0c3fc'];
+                     const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${num}&backgroundColor=${bgColors[num-1]}`;
+                     const isSelected = (editForm?.profilePic || profileData.profilePic) === avatarUrl;
+                     return (
+                       <button
+                         key={num}
+                         type="button"
+                         onClick={() => handleAvatarSelect(avatarUrl)}
+                         title="Use this avatar"
+                         className={`aspect-square w-full rounded-2xl cursor-pointer hover:-translate-y-1 transition-all duration-300 flex items-center justify-center overflow-hidden border-2 shadow-sm ${
+                           isSelected
+                             ? 'border-indigo-500 ring-4 ring-indigo-500/20 shadow-indigo-500/30'
+                             : 'border-transparent hover:border-indigo-300 dark:hover:border-indigo-500/50'
+                         }`}
+                       >
+                         <img src={avatarUrl} alt={`Avatar ${num}`} className="w-full h-full object-cover" />
+                       </button>
+                     );
+                   })}
+                 </div>
                </div>
-             </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       
       {/* Personal Details Section */}
       <div className={`p-6 md:p-8 rounded-3xl border shadow-lg backdrop-blur-xl transition-all duration-300 ${isDarkMode ? 'bg-[#181824]/60 border-white/5' : 'bg-white/80 border-white shadow-gray-200/50'}`}>
@@ -1720,7 +1722,7 @@ export default function CodingProfile() {
                 <div className="flex justify-between items-start mb-8">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400/20 to-yellow-500/20 flex items-center justify-center border border-yellow-500/30 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                      <span className="text-yellow-500 font-mono font-bold text-2xl leading-none">λ</span>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-yellow-500"><path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.497 1.9-.038.535-.536.553-1.387.039-1.901l-2.609-2.636a5.055 5.055 0 0 0-2.445-1.337l2.467-2.503c.516-.514.498-1.366-.037-1.901-.535-.535-1.387-.552-1.902-.038l-10.1 10.101c-.981.982-1.494 2.337-1.494 3.833s.513 2.851 1.494 3.833l10.105 10.105c.514.515 1.366.498 1.902-.038.535-.536.552-1.387.038-1.902l-2.609-2.636c-.467-.467-.683-1.125-.683-1.837s.195-1.357.662-1.824l2.697-2.606c.514-.515 1.365-.497 1.9-.038.535.536.553 1.387.039 1.901z"/></svg>
                     </div>
                     <div>
                       <h4 className={`text-xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>LeetCode</h4>
@@ -1786,7 +1788,7 @@ export default function CodingProfile() {
                 <div className="flex justify-between items-start mb-8">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center border border-blue-500/30 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                      <span className="text-blue-500 font-black text-2xl leading-none">CF</span>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-blue-500"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5z"/></svg>
                     </div>
                     <div>
                       <h4 className={`text-xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Codeforces</h4>
@@ -1850,7 +1852,7 @@ export default function CodingProfile() {
                 <div className="flex justify-between items-start mb-8">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 flex items-center justify-center border border-emerald-500/30 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                      <span className="text-emerald-500 font-black text-xl leading-none">GFG</span>
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-emerald-500"><path d="M12.003 5.4c-4.103 0-7.79 2.503-9.155 6.342-.142.399-.142.825 0 1.224 1.365 3.84 5.052 6.342 9.155 6.342 4.102 0 7.79-2.502 9.155-6.342.142-.399.142-.825 0-1.224-1.365-3.839-5.053-6.342-9.155-6.342zm0 12.3c-2.906 0-5.518-1.776-6.486-4.502a4.457 4.457 0 0 1 0-.916c.968-2.726 3.58-4.502 6.486-4.502 2.905 0 5.517 1.776 6.485 4.502.13.367.13.738 0 1.106-.968 2.716-3.58 4.312-6.485 4.312z"/></svg>
                     </div>
                     <div>
                       <h4 className={`text-xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>GeeksForGeeks</h4>
