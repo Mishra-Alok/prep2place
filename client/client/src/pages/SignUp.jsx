@@ -129,7 +129,7 @@ const SignUp = () => {
           </div>
         </div>
 
-        <p className="text-xs text-white/25">© 2025 Prep2Place · All rights reserved</p>
+        <p className="text-xs text-white/25">© 2026 Prep2Place · All rights reserved</p>
       </div>
 
       {/* ─── Right Form Panel ─── */}
