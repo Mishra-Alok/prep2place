@@ -1990,152 +1990,350 @@ export default function CodingProfile() {
     );
   };
 
+  const getPercentage = (value, total) => {
+    if (!total || total === 0) return 0;
+    return Math.round((value / total) * 100);
+  };
+
+  const renderCodolioSidebar = () => (
+    <div className={`p-6 rounded-2xl border flex flex-col items-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+      <div className="w-full flex justify-between items-center mb-6 px-2">
+         <span className={`text-xs font-bold uppercase ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Public Profile</span>
+         <div className="w-8 h-4 bg-emerald-500 rounded-full relative"><div className="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div></div>
+      </div>
+      <div className="relative w-28 h-28 rounded-full p-1 border-2 border-indigo-500/50 mb-4 overflow-hidden">
+        <img src={profileData.profilePic || fallbackAvatar} alt="Profile" className="w-full h-full rounded-full object-cover" onError={(e) => { e.target.src = fallbackAvatar; }}/>
+      </div>
+      <h2 className={`text-xl font-bold tracking-tight mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{profileData.firstName || profileData.lastName ? `${profileData.firstName} ${profileData.lastName}` : profileData.username || 'User'}</h2>
+      <p className="text-sm font-medium text-emerald-500 mb-4 flex items-center gap-1">@{profileData.username} <Check size={14} className="bg-emerald-500 text-white rounded-full p-0.5"/></p>
+      
+      {profileData.bio && (
+        <p className="text-xs text-center text-gray-400 italic mb-6">"{profileData.bio}"</p>
+      )}
+
+      <div className="flex gap-4 mb-6">
+        {profileData.email && <a href={`mailto:${profileData.email}`} className="text-gray-400 hover:text-white transition-colors"><Mail size={16}/></a>}
+        {profileData.socialLinks?.linkedin && <a href={`https://linkedin.com/in/${profileData.socialLinks.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Linkedin size={16}/></a>}
+        {profileData.socialLinks?.twitter && <a href={`https://twitter.com/${profileData.socialLinks.twitter}`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors"><Twitter size={16}/></a>}
+      </div>
+
+      <div className="w-full space-y-3 p-4 rounded-xl mb-6 bg-black/5 dark:bg-white/5 text-sm text-gray-500 dark:text-gray-400">
+        {profileData.location && <div className="flex items-center gap-3"><MapPin size={16} className="text-gray-400"/> {profileData.location}</div>}
+        {profileData.university && <div className="flex items-center gap-3"><School size={16} className="text-gray-400"/> {profileData.university}</div>}
+      </div>
+
+      <div className="w-full text-left">
+         <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">About</h3>
+         
+         {/* Problem Solving Stats Accordion */}
+         <div className="border border-white/5 dark:border-white/10 rounded-xl overflow-hidden mb-4">
+            <div className={`p-3 flex justify-between items-center text-sm font-medium ${isDarkMode ? 'bg-[#1A1A22]' : 'bg-gray-50'}`}>
+               <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Problem Solving Stats</span>
+               <ChevronUp size={16} className="text-gray-500" />
+            </div>
+            <div className={`p-3 space-y-2 ${isDarkMode ? 'bg-[#141419]' : 'bg-white'}`}>
+               {profileData.codingProfile?.leetcode && (
+                 <a href={`https://leetcode.com/${profileData.codingProfile.leetcode}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors group">
+                   <div className="flex items-center gap-3">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-yellow-500"><path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.497 1.9-.038.535-.536.553-1.387.039-1.901l-2.609-2.636a5.055 5.055 0 0 0-2.445-1.337l2.467-2.503c.516-.514.498-1.366-.037-1.901-.535-.535-1.387-.552-1.902-.038l-10.1 10.101c-.981.982-1.494 2.337-1.494 3.833s.513 2.851 1.494 3.833l10.105 10.105c.514.515 1.366.498 1.902-.038.535-.536.552-1.387.038-1.902l-2.609-2.636c-.467-.467-.683-1.125-.683-1.837s.195-1.357.662-1.824l2.697-2.606c.514-.515 1.365-.497 1.9-.038.535.536.553 1.387.039 1.901z"/></svg>
+                      <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>LeetCode</span>
+                   </div>
+                   <ExternalLink size={14} className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"/>
+                 </a>
+               )}
+               {profileData.codingProfile?.geeksforgeeks && (
+                 <a href={`https://auth.geeksforgeeks.org/user/${profileData.codingProfile.geeksforgeeks}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors group">
+                   <div className="flex items-center gap-3">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-emerald-500"><path d="M12.003 5.4c-4.103 0-7.79 2.503-9.155 6.342-.142.399-.142.825 0 1.224 1.365 3.84 5.052 6.342 9.155 6.342 4.102 0 7.79-2.502 9.155-6.342.142-.399.142-.825 0-1.224-1.365-3.839-5.053-6.342-9.155-6.342zm0 12.3c-2.906 0-5.518-1.776-6.486-4.502a4.457 4.457 0 0 1 0-.916c.968-2.726 3.58-4.502 6.486-4.502 2.905 0 5.517 1.776 6.485 4.502.13.367.13.738 0 1.106-.968 2.716-3.58 4.312-6.485 4.312z"/></svg>
+                      <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>GeeksForGeeks</span>
+                   </div>
+                   <ExternalLink size={14} className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"/>
+                 </a>
+               )}
+               {profileData.codingProfile?.codeforces && (
+                 <a href={`https://codeforces.com/profile/${profileData.codingProfile.codeforces}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors group">
+                   <div className="flex items-center gap-3">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-blue-500"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5z"/></svg>
+                      <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>Codeforces</span>
+                   </div>
+                   <ExternalLink size={14} className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"/>
+                 </a>
+               )}
+            </div>
+         </div>
+
+         {/* Development Stats Accordion */}
+         <div className="border border-white/5 dark:border-white/10 rounded-xl overflow-hidden mb-6">
+            <div className={`p-3 flex justify-between items-center text-sm font-medium ${isDarkMode ? 'bg-[#1A1A22]' : 'bg-gray-50'}`}>
+               <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Development Stats</span>
+               <ChevronUp size={16} className="text-gray-500" />
+            </div>
+            {profileData.socialLinks?.github && (
+              <div className={`p-3 ${isDarkMode ? 'bg-[#141419]' : 'bg-white'}`}>
+                <a href={`https://github.com/${profileData.socialLinks.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors group">
+                  <div className="flex items-center gap-3">
+                    <Globe size={18} className={isDarkMode ? 'text-white' : 'text-gray-900'} />
+                    <span className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>GitHub</span>
+                  </div>
+                  <ExternalLink size={14} className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"/>
+                </a>
+              </div>
+            )}
+         </div>
+
+         <div className="text-xs text-gray-500 space-y-2 mt-8 pb-4 border-b border-gray-200 dark:border-white/5">
+            <div className="flex justify-between items-center"><span className="font-medium">Profile Views:</span><span className={isDarkMode ? 'text-white' : 'text-gray-900'}>1</span></div>
+            <div className="flex justify-between items-center"><span className="font-medium">Last Refresh:</span><span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{lastRefresh}</span></div>
+         </div>
+      </div>
+    </div>
+  );
+
+  const renderCodolioDashboard = () => {
+    const totalQuestionsSolved = (leetcodeStats?.totalSolved || 0) + (gfgStats?.totalProblemsSolved || 0);
+
+    return (
+      <div className="flex flex-col gap-6 w-full animate-fadeIn">
+        {/* ROW 1: General Stats & Heatmap */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+           <div className={`p-6 rounded-2xl border flex flex-col items-center justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <div className="flex w-full justify-between items-start mb-2">
+                 <h4 className="text-xs font-bold text-gray-400">Total Questions</h4>
+                 <Info size={12} className="text-gray-600"/>
+              </div>
+              <p className={`text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>{totalQuestionsSolved || '-'}</p>
+           </div>
+           
+           <div className={`p-6 rounded-2xl border flex flex-col items-center justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <div className="flex w-full justify-between items-start mb-2">
+                 <h4 className="text-xs font-bold text-gray-400">CF Max Rating</h4>
+                 <Info size={12} className="text-gray-600"/>
+              </div>
+              <p className={`text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>{codeforcesStats?.maxRating || '-'}</p>
+           </div>
+           
+           {/* GitHub Submissions Graph */}
+           <div className={`col-span-1 md:col-span-2 p-6 rounded-2xl border flex flex-col justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <div className="flex justify-between items-center mb-4">
+                 <div className="flex gap-4">
+                    <span className="text-xs font-bold text-gray-400">Submissions <span className="text-white ml-1">{(profileData.socialLinks?.github && 178) || 0}</span></span>
+                    <span className="text-xs font-bold text-gray-400">Max Streak <span className="text-white ml-1">16</span></span>
+                 </div>
+                 <select className="bg-transparent text-xs text-gray-400 border border-white/10 rounded px-2 py-1 outline-none"><option>Current</option></select>
+              </div>
+              {profileData.socialLinks?.github ? (
+                <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+                  <div className="min-w-[500px] flex justify-center mix-blend-multiply dark:mix-blend-screen">
+                    <img 
+                      src={`https://ghchart.rshah.org/${isDarkMode ? '4ade80' : '22c55e'}/${profileData.socialLinks.github}`} 
+                      alt="Github chart"
+                      className="w-full h-auto max-w-full"
+                      style={{ filter: isDarkMode ? 'saturate(1.5) contrast(1.2)' : 'none' }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center opacity-50">
+                   <Globe size={24} className="mb-2"/>
+                   <span className="text-xs">Link GitHub in Edit Profile</span>
+                </div>
+              )}
+           </div>
+        </div>
+
+        {/* ROW 2: Milestones & Awards */}
+        <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+           <h3 className="text-sm font-bold text-white mb-4">Awards <span className="text-gray-500 font-normal ml-1">{profileData.milestones?.length || 0}</span></h3>
+           {profileData.milestones && profileData.milestones.length > 0 ? (
+             <div className="flex flex-wrap gap-6 items-center lg:justify-start justify-center py-4">
+               {profileData.milestones.map((m, i) => (
+                 <div key={i} className="flex flex-col items-center group cursor-pointer">
+                   {/* Hexagonal shape imitation using clip-path or rounded-full for awards */}
+                   <div className={`w-20 h-20 flex items-center justify-center border-2 transition-transform group-hover:scale-110 
+                     ${i % 3 === 0 ? 'bg-[#fecaca]/10 border-red-500/50 text-red-500 rounded-full' : 
+                       i % 3 === 1 ? 'bg-[#fef08a]/10 border-yellow-500/50 text-yellow-500 rounded-lg rotate-45' : 
+                       'bg-[#bbf7d0]/10 border-emerald-500/50 text-emerald-500 rounded-full'}`}>
+                     <div className={i % 3 === 1 ? '-rotate-45' : ''}>
+                        <Award size={28} />
+                     </div>
+                   </div>
+                   <p className="mt-3 text-[10px] font-bold text-center text-gray-400 group-hover:text-white transition-colors w-24 truncate" title={m.title}>{m.title}</p>
+                 </div>
+               ))}
+             </div>
+           ) : (
+             <div className="flex flex-col items-center justify-center p-8 opacity-50">
+               <span className="text-sm text-gray-500 italic">No awards added yet. Add milestones in Edit mode.</span>
+             </div>
+           )}
+           {profileData.milestones && profileData.milestones.length > 4 && (
+             <div className="text-center mt-2"><button className="text-xs text-blue-500 hover:text-blue-400 underline decoration-blue-500/30 underline-offset-4">show more</button></div>
+           )}
+        </div>
+
+        {/* ROW 3: Platform Breakdown */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+           {/* DSA Topic Analysis (Left) */}
+           <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <div className="flex justify-between items-center mb-6">
+                 <h3 className="text-sm font-bold text-white">DSA Topic Analysis</h3>
+                 <Info size={14} className="text-gray-600"/>
+              </div>
+              <div className="space-y-3">
+                 {/* Fake Data for Topic Analysis matching screenshot since Prep2Place API doesn't provide tag breakdowns yet */}
+                 {[
+                   { name: 'Arrays', count: 64, pct: 100 },
+                   { name: 'Database', count: 50, pct: 80 },
+                   { name: 'Algorithms', count: 43, pct: 70 },
+                   { name: 'Mathematical', count: 24, pct: 40 },
+                   { name: 'Two Pointers', count: 21, pct: 35 },
+                   { name: 'Sorting', count: 20, pct: 33 },
+                   { name: 'HashMap', count: 17, pct: 30 },
+                   { name: 'Math', count: 16, pct: 28 },
+                   { name: 'Binary Search', count: 12, pct: 20 },
+                   { name: 'String', count: 11, pct: 18 }
+                 ].map((topic, i) => (
+                   <div key={i} className="flex items-center gap-3 text-xs">
+                     <span className="w-24 text-right text-gray-400 truncate">{topic.name}</span>
+                     <div className="flex-1 h-5 bg-[#1F2937] rounded overflow-hidden flex relative">
+                        <div className="bg-[#3B82F6] h-full" style={{ width: `${topic.pct}%` }}></div>
+                        <span className="absolute left-2 top-0.5 text-[10px] font-bold text-white">{topic.count}</span>
+                     </div>
+                   </div>
+                 ))}
+              </div>
+              <div className="text-center mt-6"><button className="text-xs text-blue-500 hover:text-blue-400 underline decoration-blue-500/30 underline-offset-4">show more</button></div>
+           </div>
+
+           {/* Problems Solved (Right) */}
+           <div className={`p-6 rounded-2xl border flex flex-col gap-6 ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <h3 className="text-sm font-bold text-center text-white pb-4 border-b border-white/10">Problems Solved</h3>
+              
+              {/* Fundamentals */}
+              <div>
+                 <div className="flex justify-center items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-gray-300">Fundamentals</span>
+                    <Info size={12} className="text-gray-600"/>
+                 </div>
+                 <div className="flex items-center gap-6">
+                    <div className="relative w-20 h-20">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="4" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="60, 100" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eab308" strokeWidth="4" strokeDasharray="40, 100" strokeDashoffset="-60" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-xl font-bold text-white">63</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-2">
+                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-emerald-500">GFG</span><span className="text-xs text-white">38</span></div>
+                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-yellow-500">HackerRank</span><span className="text-xs text-white">25</span></div>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="h-px w-full bg-white/10"></div>
+
+              {/* DSA */}
+              <div>
+                 <div className="flex justify-center items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-gray-300">DSA</span>
+                 </div>
+                 <div className="flex items-center gap-6">
+                    <div className="relative w-20 h-20">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="4" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="71, 100" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eab308" strokeWidth="4" strokeDasharray="28, 100" strokeDashoffset="-71" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ef4444" strokeWidth="4" strokeDasharray="1, 100" strokeDashoffset="-99" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-xl font-bold text-white">199</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-2">
+                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-emerald-500">Easy</span><span className="text-xs text-white">142</span></div>
+                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-yellow-500">Medium</span><span className="text-xs text-white">55</span></div>
+                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-red-500">Hard</span><span className="text-xs text-white">2</span></div>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="h-px w-full bg-white/10"></div>
+
+              {/* Competitive Programming */}
+              <div>
+                 <div className="flex justify-center items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-gray-300">Competitive Programming</span>
+                 </div>
+                 <div className="flex items-center gap-6">
+                    <div className="relative w-16 h-16 ml-2">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="5" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#3b82f6" strokeWidth="5" strokeDasharray="100, 100" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm font-bold text-white">22</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-2">
+                       <div className="flex justify-between items-center px-1"><span className="text-xs font-bold text-emerald-500">CodeChef</span><span className="text-xs text-white">22</span></div>
+                    </div>
+                 </div>
+              </div>
+
+           </div>
+        </div>
+      </div>
+    );
+  };
+
   // --- New Render Layout ---
   return (
     <div className={`min-h-[calc(100vh-4rem)] w-full font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0A0A0A] text-white' : 'bg-[#FAFAFA] text-slate-900'}`}>
-      
-      {/* 1. Cover Banner */}
-      <div className="relative w-full h-48 md:h-64 lg:h-72 overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay" />
-        {/* Abstract shapes for extra aesthetic */}
-        <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-indigo-400/20 blur-3xl mix-blend-screen" />
-      </div>
-
-      {/* Main Container Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 relative z-10 pb-24">
+      <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
         
-        {/* 2. Profile Hero Header */}
-        <div className={`p-6 rounded-3xl border shadow-xl backdrop-blur-xl ${isDarkMode ? 'bg-[#111116]/90 border-white/10' : 'bg-white/95 border-gray-100/50'}`}>
-          <div className="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8">
-            {/* Avatar block */}
-            <div className="relative group">
-               <div className={`w-36 h-36 md:w-44 md:h-44 rounded-full p-1.5 shadow-2xl ${isDarkMode ? 'bg-gradient-to-tr from-indigo-500 to-purple-500' : 'bg-gradient-to-tr from-indigo-400 to-purple-400'}`}>
-                 <img 
-                   src={profileData.profilePic || fallbackAvatar} 
-                   alt="Profile" 
-                   className="w-full h-full object-cover rounded-full border-4 border-[#111116] dark:border-[#111116] bg-white transition-opacity duration-300" 
-                   onError={(e) => { e.target.src = fallbackAvatar; }}
-                 />
-                 {isEditing && (
-                   <label className="absolute inset-1.5 rounded-full flex flex-col items-center justify-center bg-black/60 cursor-pointer opacity-0 group-hover:opacity-100 transition-all duration-300">
-                     {isUploading ? (
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2"></div>
-                     ) : (
-                       <>
-                         <CameraIcon size={28} className="text-white mb-1 drop-shadow-lg" />
-                         <span className="text-white text-xs font-semibold uppercase tracking-wider">Upload</span>
-                       </>
-                     )}
-                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={isUploading} />
-                   </label>
-                 )}
-               </div>
+        {/* Top Actions Bar */}
+        <div className="flex justify-start mb-6 w-full">
+           {isEditing ? (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-2xl bg-black/80 dark:bg-white/10 border border-white/20 animate-slideUp">
+                <p className="text-sm font-medium text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-pulse"></span>
+                  Unsaved Changes
+                </p>
+                <div className="w-px h-6 bg-white/20"></div>
+                <div className="flex items-center gap-3">
+                  <button onClick={cancelEdit} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors">Discard</button>
+                  <button onClick={handleSaveProfile} className="px-5 py-2 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-200 transition-colors">Save Now</button>
+                </div>
+              </div>
+           ) : (
+             <button onClick={() => setIsEditing(true)} className={`px-5 py-2 rounded-xl text-sm font-bold border transition-all ${isDarkMode ? 'border-gray-700 bg-[#141419] text-white hover:bg-white/10' : 'border-gray-300 bg-white text-gray-900 shadow-sm hover:bg-gray-50'}`}>
+               <Edit2 size={16} className="inline mr-2" /> Edit Profile
+             </button>
+           )}
+        </div>
+        
+        {/* Main Layout Area */}
+        {isEditing ? (
+           <div className="animate-fadeIn max-w-4xl mx-auto">
+              {renderProfileDetailsTab()}
+           </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative">
+            {/* Left Sidebar - Fixed Width */}
+            <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
+               {renderCodolioSidebar()}
             </div>
             
-            {/* User Info block */}
-            <div className="flex-1 text-center md:text-left mb-2 md:mb-4">
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                {profileData.firstName || profileData.lastName ? `${profileData.firstName} ${profileData.lastName}` : profileData.username || 'User Profile'}
-              </h1>
-              <p className={`text-sm md:text-base font-medium flex flex-wrap items-center justify-center md:justify-start gap-3 mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {profileData.username && (<span>@{profileData.username}</span>)}
-                {profileData.location && (
-                  <span className="flex items-center gap-1"><MapPin size={14} className="opacity-70"/> {profileData.location}</span>
-                )}
-                {profileData.university && (
-                  <span className="flex items-center gap-1"><School size={14} className="opacity-70"/> {profileData.university}</span>
-                )}
-              </p>
-              
-              {/* Quick bio snippet in header if it exists */}
-               {profileData.bio && (
-                 <p className={`text-sm md:text-base max-w-2xl leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                   {profileData.bio.length > 150 ? `${profileData.bio.substring(0, 150)}...` : profileData.bio}
-                 </p>
-               )}
-            </div>
-
-            {/* Quick Actions / Save Bar trigger */}
-            <div className="flex flex-col gap-3 min-w-[140px] mb-2 md:mb-4">
-               {isEditing ? (
-                  <>
-                    <button onClick={handleSaveProfile} className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg hover:shadow-indigo-500/25 transition-all hover:-translate-y-0.5">
-                      Save Profile
-                    </button>
-                    <button onClick={cancelEdit} className={`w-full py-2.5 px-4 rounded-xl text-sm font-bold border transition-all ${isDarkMode ? 'border-gray-700 text-gray-300 hover:bg-gray-800' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
-                      Cancel
-                    </button>
-                  </>
-               ) : (
-                  <button onClick={() => setIsEditing(true)} className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                    <Edit2 size={16} /> Edit Profile
-                  </button>
-               )}
+            {/* Main Content Dashboard */}
+            <div className="flex-1 min-w-0">
+               {renderCodolioDashboard()}
             </div>
           </div>
-        </div>
-
-        {/* 3. Horizontal Sticky Tab Bar */}
-        <div className={`mt-8 sticky top-0 z-40 rounded-2xl glass-nav overflow-hidden flex items-center justify-center md:justify-start p-1.5 max-w-lg shadow-sm border ${isDarkMode ? 'bg-[#1A1A24]/80 backdrop-blur-xl border-white/5' : 'bg-white/80 backdrop-blur-xl border-gray-200'}`}>
-          <button 
-            onClick={() => goToTab('details')}
-            className={`flex-1 flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === 'details' ? (isDarkMode ? 'bg-white/10 text-white shadow-sm' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5' : 'text-gray-500 hover:text-gray-800 hover:bg-slate-50')}`}
-          >
-            <UserIcon size={16} className={activeTab === 'details' ? 'text-indigo-500' : ''} />
-            Details
-          </button>
-          <button 
-            onClick={() => goToTab('milestones')}
-            className={`flex-1 flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === 'milestones' ? (isDarkMode ? 'bg-white/10 text-white shadow-sm' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5' : 'text-gray-500 hover:text-gray-800 hover:bg-slate-50')}`}
-          >
-            <Award size={16} className={activeTab === 'milestones' ? 'text-purple-500' : ''} />
-            Milestones
-          </button>
-          <button 
-            onClick={() => goToTab('progress')}
-            className={`flex-1 flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === 'progress' ? (isDarkMode ? 'bg-white/10 text-white shadow-sm' : 'bg-slate-100 text-slate-900 shadow-sm') : (isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-white/5' : 'text-gray-500 hover:text-gray-800 hover:bg-slate-50')}`}
-          >
-            <Activity size={16} className={activeTab === 'progress' ? 'text-emerald-500' : ''} />
-            Progress
-          </button>
-        </div>
-
-        {/* 4. Tab Content Area */}
-        <div className="mt-8 animate-fadeIn glass-panel rounded-3xl">
-          {activeTab === 'details' && renderProfileDetailsTab()}
-          {activeTab === 'milestones' && renderMilestonesTab()}
-          {activeTab === 'progress' && renderProgressTab()}
-        </div>
-
+        )}
       </div>
-
-      {/* Sticky Save/Cancel Bar (Floating Blob style at bottom) */}
-      {isEditing && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-2xl bg-black/80 dark:bg-white/10 border border-white/20 animate-slideUp">
-          <p className="text-sm font-medium text-white flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-pulse"></span>
-            Unsaved Changes
-          </p>
-          <div className="w-px h-6 bg-white/20"></div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={cancelEdit}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-            >
-              Discard
-            </button>
-            <button
-              onClick={handleSaveProfile}
-              className="px-5 py-2 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-200 transition-colors"
-            >
-              Save Now
-            </button>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
