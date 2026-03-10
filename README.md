@@ -81,7 +81,7 @@ Create a `.env` file in the `backend` directory and add the necessary secret key
    npm run dev
    ```
 
-The application will now be running on your `https://prep2place-chi.vercel.app/`.
+The application will now be running on your `https://prep2place-chi.vercel.app`.
 
 ## 🤝 Contributing
 
