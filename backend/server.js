@@ -20,7 +20,13 @@ connection();
 
 app.use(express.json());
 app.use(cors({
-  origin: [process.env.CLIENT_URL, "http://localhost:5173", "https://prep2place-chi.vercel.app"].filter(Boolean),
+  origin: function (origin, callback) {
+    if (!origin || origin.startsWith("http://localhost:") || origin.endsWith("vercel.app") || origin === process.env.CLIENT_URL) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
