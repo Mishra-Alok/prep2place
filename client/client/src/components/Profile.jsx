@@ -2101,7 +2101,8 @@ export default function CodingProfile() {
                  <h4 className="text-xs font-bold text-gray-400">Total Questions</h4>
                  <Info size={12} className="text-gray-600"/>
               </div>
-              <p className={`text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>{totalQuestionsSolved || '-'}</p>
+              <p className={`text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>{totalQuestionsSolved > 0 ? totalQuestionsSolved : '-'}</p>
+              <p className="text-xs text-gray-500 mt-2">Across all platforms</p>
            </div>
            
            <div className={`p-6 rounded-2xl border flex flex-col items-center justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
@@ -2109,15 +2110,16 @@ export default function CodingProfile() {
                  <h4 className="text-xs font-bold text-gray-400">CF Max Rating</h4>
                  <Info size={12} className="text-gray-600"/>
               </div>
-              <p className={`text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>{codeforcesStats?.maxRating || '-'}</p>
+              <p className={`text-5xl font-black tracking-tight ${codeforcesStats?.maxRating ? getCodeforcesColor(codeforcesStats.maxRating) : (isDarkMode ? 'text-white' : 'text-gray-900')} mt-2`}>{codeforcesStats?.maxRating || '-'}</p>
+              <p className="text-xs text-gray-500 mt-2">{codeforcesStats ? getCodeforcesRankLabel(codeforcesStats.maxRating) : 'Not linked'}</p>
            </div>
            
            {/* GitHub Submissions Graph */}
            <div className={`col-span-1 md:col-span-2 p-6 rounded-2xl border flex flex-col justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
               <div className="flex justify-between items-center mb-4">
                  <div className="flex gap-4">
-                    <span className="text-xs font-bold text-gray-400">Submissions <span className="text-white ml-1">{(profileData.socialLinks?.github && 178) || 0}</span></span>
-                    <span className="text-xs font-bold text-gray-400">Max Streak <span className="text-white ml-1">16</span></span>
+                    <span className="text-xs font-bold text-gray-400">Submissions <span className="text-white ml-1">{(profileData.socialLinks?.github && githubStats?.totalContributions) || 0}</span></span>
+                    <span className="text-xs font-bold text-gray-400">Max Streak <span className="text-white ml-1">{githubStats?.maxStreak || 0}</span></span>
                  </div>
                  <select className="bg-transparent text-xs text-gray-400 border border-white/10 rounded px-2 py-1 outline-none"><option>Current</option></select>
               </div>
@@ -2143,7 +2145,7 @@ export default function CodingProfile() {
 
         {/* ROW 2: Milestones & Awards */}
         <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
-           <h3 className="text-sm font-bold text-white mb-4">Awards <span className="text-gray-500 font-normal ml-1">{profileData.milestones?.length || 0}</span></h3>
+           <h3 className={`text-sm font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Awards <span className="text-gray-500 font-normal ml-1">{profileData.milestones?.length || 0}</span></h3>
            {profileData.milestones && profileData.milestones.length > 0 ? (
              <div className="flex flex-wrap gap-6 items-center lg:justify-start justify-center py-4">
                {profileData.milestones.map((m, i) => (
@@ -2173,121 +2175,246 @@ export default function CodingProfile() {
 
         {/* ROW 3: Platform Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-           {/* DSA Topic Analysis (Left) */}
+           {/* Platform Difficulty Breakdown (Left) */}
            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
               <div className="flex justify-between items-center mb-6">
-                 <h3 className="text-sm font-bold text-white">DSA Topic Analysis</h3>
+                 <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Platform Breakdown</h3>
                  <Info size={14} className="text-gray-600"/>
               </div>
-              <div className="space-y-3">
-                 {/* Fake Data for Topic Analysis matching screenshot since Prep2Place API doesn't provide tag breakdowns yet */}
-                 {[
-                   { name: 'Arrays', count: 64, pct: 100 },
-                   { name: 'Database', count: 50, pct: 80 },
-                   { name: 'Algorithms', count: 43, pct: 70 },
-                   { name: 'Mathematical', count: 24, pct: 40 },
-                   { name: 'Two Pointers', count: 21, pct: 35 },
-                   { name: 'Sorting', count: 20, pct: 33 },
-                   { name: 'HashMap', count: 17, pct: 30 },
-                   { name: 'Math', count: 16, pct: 28 },
-                   { name: 'Binary Search', count: 12, pct: 20 },
-                   { name: 'String', count: 11, pct: 18 }
-                 ].map((topic, i) => (
-                   <div key={i} className="flex items-center gap-3 text-xs">
-                     <span className="w-24 text-right text-gray-400 truncate">{topic.name}</span>
-                     <div className="flex-1 h-5 bg-[#1F2937] rounded overflow-hidden flex relative">
-                        <div className="bg-[#3B82F6] h-full" style={{ width: `${topic.pct}%` }}></div>
-                        <span className="absolute left-2 top-0.5 text-[10px] font-bold text-white">{topic.count}</span>
-                     </div>
-                   </div>
-                 ))}
-              </div>
-              <div className="text-center mt-6"><button className="text-xs text-blue-500 hover:text-blue-400 underline decoration-blue-500/30 underline-offset-4">show more</button></div>
+
+              {/* LeetCode Bar Section */}
+              {leetcodeStats && (
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-xs font-bold text-yellow-500 flex items-center gap-1.5">
+                      <span className="font-mono">λ</span> LeetCode
+                    </span>
+                    <span className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{leetcodeStats.totalSolved} solved</span>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { label: 'Easy', solved: leetcodeStats.easySolved, total: leetcodeStats.totalEasy || 870, color: 'from-teal-400 to-teal-500', bg: isDarkMode ? 'bg-teal-500/10 border-teal-500/20' : 'bg-teal-50 border-teal-100', text: 'text-teal-500' },
+                      { label: 'Medium', solved: leetcodeStats.mediumSolved, total: leetcodeStats.totalMedium || 1816, color: 'from-amber-400 to-amber-500', bg: isDarkMode ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-50 border-amber-100', text: 'text-amber-500' },
+                      { label: 'Hard', solved: leetcodeStats.hardSolved, total: leetcodeStats.totalHard || 791, color: 'from-rose-500 to-rose-600', bg: isDarkMode ? 'bg-rose-500/10 border-rose-500/20' : 'bg-rose-50 border-rose-100', text: 'text-rose-500' },
+                    ].map((item) => {
+                      const pct = item.total > 0 ? Math.round((item.solved / item.total) * 100) : 0;
+                      return (
+                        <div key={item.label} className="group relative">
+                          <div className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 cursor-default ${item.bg}`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest w-12 flex-shrink-0 ${item.text}`}>{item.label}</span>
+                            <div className={`flex-1 h-3 rounded-full overflow-hidden ${isDarkMode ? 'bg-black/30' : 'bg-white/70'}`}>
+                              <div className={`h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-700 ease-out`} style={{ width: `${pct}%` }} />
+                            </div>
+                            <span className={`text-xs font-black w-20 text-right flex-shrink-0 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {item.solved}<span className="text-gray-400 font-normal">/{item.total}</span>
+                            </span>
+                          </div>
+                          <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-10 whitespace-nowrap">
+                            <div className="bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl">
+                              {pct}% complete · {item.solved} of {item.total}
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* GFG Bar Section */}
+              {gfgStats && (
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-xs font-bold text-emerald-500"><span className="font-bold">G</span> GeeksForGeeks</span>
+                    <span className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{gfgStats.totalProblemsSolved} solved</span>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { label: 'Easy', solved: gfgStats.easy || 0, total: gfgStats.totalProblemsSolved, color: 'from-teal-400 to-teal-500', bg: isDarkMode ? 'bg-teal-500/10 border-teal-500/20' : 'bg-teal-50 border-teal-100', text: 'text-teal-500' },
+                      { label: 'Medium', solved: gfgStats.medium || 0, total: gfgStats.totalProblemsSolved, color: 'from-amber-400 to-amber-500', bg: isDarkMode ? 'bg-amber-500/10 border-amber-500/20' : 'bg-amber-50 border-amber-100', text: 'text-amber-500' },
+                      { label: 'Hard', solved: gfgStats.hard || 0, total: gfgStats.totalProblemsSolved, color: 'from-rose-500 to-rose-600', bg: isDarkMode ? 'bg-rose-500/10 border-rose-500/20' : 'bg-rose-50 border-rose-100', text: 'text-rose-500' },
+                    ].map((item) => {
+                      const pct = item.total > 0 ? Math.round((item.solved / item.total) * 100) : 0;
+                      return (
+                        <div key={item.label} className="group relative">
+                          <div className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 cursor-default ${item.bg}`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest w-12 flex-shrink-0 ${item.text}`}>{item.label}</span>
+                            <div className={`flex-1 h-3 rounded-full overflow-hidden ${isDarkMode ? 'bg-black/30' : 'bg-white/70'}`}>
+                              <div className={`h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-700 ease-out`} style={{ width: `${pct}%` }} />
+                            </div>
+                            <span className={`text-xs font-black w-20 text-right flex-shrink-0 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {item.solved}<span className="text-gray-400 font-normal">/{item.total}</span>
+                            </span>
+                          </div>
+                          <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-10 whitespace-nowrap">
+                            <div className="bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl">
+                              {pct}% of total · {item.solved} of {item.total}
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Codeforces Section */}
+              {codeforcesStats && (
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-xs font-bold text-blue-500"><span className="font-bold">ıı</span> Codeforces</span>
+                    <span className={`text-xs font-bold ${getCodeforcesColor(codeforcesStats.rating)}`}>{getCodeforcesRankLabel(codeforcesStats.rating)}</span>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { label: 'Rating', value: codeforcesStats.rating || 0, max: 3500, color: 'from-blue-400 to-blue-600', bg: isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-blue-50 border-blue-100', text: 'text-blue-500' },
+                      { label: 'Max', value: codeforcesStats.maxRating || 0, max: 3500, color: 'from-purple-400 to-purple-600', bg: isDarkMode ? 'bg-purple-500/10 border-purple-500/20' : 'bg-purple-50 border-purple-100', text: 'text-purple-500' },
+                    ].map((item) => {
+                      const pct = item.max > 0 ? Math.round((item.value / item.max) * 100) : 0;
+                      return (
+                        <div key={item.label} className="group relative">
+                          <div className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 cursor-default ${item.bg}`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest w-12 flex-shrink-0 ${item.text}`}>{item.label}</span>
+                            <div className={`flex-1 h-3 rounded-full overflow-hidden ${isDarkMode ? 'bg-black/30' : 'bg-white/70'}`}>
+                              <div className={`h-full rounded-full bg-gradient-to-r ${item.color} transition-all duration-700 ease-out`} style={{ width: `${pct}%` }} />
+                            </div>
+                            <span className={`text-xs font-black w-20 text-right flex-shrink-0 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{item.value}</span>
+                          </div>
+                          <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-10 whitespace-nowrap">
+                            <div className="bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl">
+                              {item.value} / {item.max} ({pct}%)
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {!leetcodeStats && !gfgStats && !codeforcesStats && (
+                <div className="flex flex-col items-center justify-center py-10 opacity-50">
+                  <Activity size={32} className="mb-3 text-gray-400" />
+                  <p className="text-sm text-gray-400 text-center">Link your coding profiles in Edit Profile to see breakdown.</p>
+                </div>
+              )}
            </div>
 
-           {/* Problems Solved (Right) */}
-           <div className={`p-6 rounded-2xl border flex flex-col gap-6 ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
-              <h3 className="text-sm font-bold text-center text-white pb-4 border-b border-white/10">Problems Solved</h3>
+           {/* Problems Solved - Dynamic Ring Charts (Right) */}
+           <div className={`p-6 rounded-2xl border flex flex-col gap-5 ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <h3 className={`text-sm font-bold text-center pb-4 border-b ${isDarkMode ? 'text-white border-white/10' : 'text-gray-900 border-gray-100'}`}>Problems Solved</h3>
               
-              {/* Fundamentals */}
-              <div>
-                 <div className="flex justify-center items-center gap-2 mb-4">
-                    <span className="text-xs font-bold text-gray-300">Fundamentals</span>
-                    <Info size={12} className="text-gray-600"/>
-                 </div>
-                 <div className="flex items-center gap-6">
-                    <div className="relative w-20 h-20">
+              {/* LeetCode Ring */}
+              {leetcodeStats ? (
+                <div>
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-yellow-500">λ LeetCode</span>
+                    {leetcodeStats.ranking && <span className="text-[10px] text-gray-500">Rank #{typeof leetcodeStats.ranking === 'number' ? leetcodeStats.ranking.toLocaleString() : leetcodeStats.ranking}</span>}
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="relative w-20 h-20 group cursor-default flex-shrink-0">
                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                         <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="4" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="60, 100" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eab308" strokeWidth="4" strokeDasharray="40, 100" strokeDashoffset="-60" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#14b8a6" strokeWidth="4"
+                          strokeDasharray={`${leetcodeStats.totalSolved > 0 ? (leetcodeStats.easySolved / leetcodeStats.totalSolved) * 100 : 0}, 100`} />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f59e0b" strokeWidth="4"
+                          strokeDasharray={`${leetcodeStats.totalSolved > 0 ? (leetcodeStats.mediumSolved / leetcodeStats.totalSolved) * 100 : 0}, 100`}
+                          strokeDashoffset={`-${leetcodeStats.totalSolved > 0 ? (leetcodeStats.easySolved / leetcodeStats.totalSolved) * 100 : 0}`} />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ef4444" strokeWidth="4"
+                          strokeDasharray={`${leetcodeStats.totalSolved > 0 ? (leetcodeStats.hardSolved / leetcodeStats.totalSolved) * 100 : 0}, 100`}
+                          strokeDashoffset={`-${leetcodeStats.totalSolved > 0 ? ((leetcodeStats.easySolved + leetcodeStats.mediumSolved) / leetcodeStats.totalSolved) * 100 : 0}`} />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xl font-bold text-white">63</span>
+                        <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{leetcodeStats.totalSolved}</span>
+                      </div>
+                      <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-20 whitespace-nowrap">
+                        <div className="bg-gray-900 text-white text-[10px] font-bold px-3 py-2 rounded-lg shadow-xl space-y-0.5">
+                          <p className="text-teal-400">Easy: {leetcodeStats.easySolved}</p>
+                          <p className="text-amber-400">Med: {leetcodeStats.mediumSolved}</p>
+                          <p className="text-red-400">Hard: {leetcodeStats.hardSolved}</p>
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                        </div>
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-emerald-500">GFG</span><span className="text-xs text-white">38</span></div>
-                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-yellow-500">HackerRank</span><span className="text-xs text-white">25</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-teal-500/10' : 'bg-teal-50'}`}><span className="text-xs font-bold text-teal-500">Easy</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{leetcodeStats.easySolved}</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-amber-500/10' : 'bg-amber-50'}`}><span className="text-xs font-bold text-amber-500">Medium</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{leetcodeStats.mediumSolved}</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-rose-500/10' : 'bg-rose-50'}`}><span className="text-xs font-bold text-rose-500">Hard</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{leetcodeStats.hardSolved}</span></div>
                     </div>
-                 </div>
-              </div>
+                  </div>
+                </div>
+              ) : profileData.codingProfile?.leetcode ? (
+                <div className="flex items-center justify-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-4 border-yellow-500/30 border-t-yellow-500" />
+                </div>
+              ) : null}
 
-              <div className="h-px w-full bg-white/10"></div>
+              {(leetcodeStats && gfgStats) && <div className={`h-px w-full ${isDarkMode ? 'bg-white/10' : 'bg-gray-100'}`} />}
 
-              {/* DSA */}
-              <div>
-                 <div className="flex justify-center items-center gap-2 mb-4">
-                    <span className="text-xs font-bold text-gray-300">DSA</span>
-                 </div>
-                 <div className="flex items-center gap-6">
-                    <div className="relative w-20 h-20">
+              {/* GFG Ring */}
+              {gfgStats ? (
+                <div>
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-emerald-500">G GeeksForGeeks</span>
+                    {gfgStats.codingScore > 0 && <span className="text-[10px] text-gray-500">Score {gfgStats.codingScore}</span>}
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="relative w-20 h-20 group cursor-default flex-shrink-0">
                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                         <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="4" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="71, 100" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eab308" strokeWidth="4" strokeDasharray="28, 100" strokeDashoffset="-71" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ef4444" strokeWidth="4" strokeDasharray="1, 100" strokeDashoffset="-99" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#14b8a6" strokeWidth="4"
+                          strokeDasharray={`${gfgStats.totalProblemsSolved > 0 ? ((gfgStats.easy || 0) / gfgStats.totalProblemsSolved) * 100 : 0}, 100`} />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f59e0b" strokeWidth="4"
+                          strokeDasharray={`${gfgStats.totalProblemsSolved > 0 ? ((gfgStats.medium || 0) / gfgStats.totalProblemsSolved) * 100 : 0}, 100`}
+                          strokeDashoffset={`-${gfgStats.totalProblemsSolved > 0 ? ((gfgStats.easy || 0) / gfgStats.totalProblemsSolved) * 100 : 0}`} />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ef4444" strokeWidth="4"
+                          strokeDasharray={`${gfgStats.totalProblemsSolved > 0 ? ((gfgStats.hard || 0) / gfgStats.totalProblemsSolved) * 100 : 0}, 100`}
+                          strokeDashoffset={`-${gfgStats.totalProblemsSolved > 0 ? (((gfgStats.easy || 0) + (gfgStats.medium || 0)) / gfgStats.totalProblemsSolved) * 100 : 0}`} />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xl font-bold text-white">199</span>
+                        <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{gfgStats.totalProblemsSolved}</span>
+                      </div>
+                      <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-20 whitespace-nowrap">
+                        <div className="bg-gray-900 text-white text-[10px] font-bold px-3 py-2 rounded-lg shadow-xl space-y-0.5">
+                          <p className="text-teal-400">Easy: {gfgStats.easy || 0}</p>
+                          <p className="text-amber-400">Med: {gfgStats.medium || 0}</p>
+                          <p className="text-red-400">Hard: {gfgStats.hard || 0}</p>
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                        </div>
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-emerald-500">Easy</span><span className="text-xs text-white">142</span></div>
-                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-yellow-500">Medium</span><span className="text-xs text-white">55</span></div>
-                       <div className="flex justify-between items-center bg-[#1F2937] px-3 py-1.5 rounded"><span className="text-xs font-bold text-red-500">Hard</span><span className="text-xs text-white">2</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-teal-500/10' : 'bg-teal-50'}`}><span className="text-xs font-bold text-teal-500">Easy</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{gfgStats.easy || 0}</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-amber-500/10' : 'bg-amber-50'}`}><span className="text-xs font-bold text-amber-500">Medium</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{gfgStats.medium || 0}</span></div>
+                      <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-rose-500/10' : 'bg-rose-50'}`}><span className="text-xs font-bold text-rose-500">Hard</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{gfgStats.hard || 0}</span></div>
+                      {gfgStats.instituteRank && (
+                        <div className={`flex justify-between items-center px-3 py-1.5 rounded-lg ${isDarkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}><span className="text-xs font-bold text-emerald-500">Inst. Rank</span><span className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>#{gfgStats.instituteRank}</span></div>
+                      )}
                     </div>
-                 </div>
-              </div>
+                  </div>
+                </div>
+              ) : profileData.codingProfile?.geeksforgeeks ? (
+                <div className="flex items-center justify-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-4 border-emerald-500/30 border-t-emerald-500" />
+                </div>
+              ) : null}
 
-              <div className="h-px w-full bg-white/10"></div>
-
-              {/* Competitive Programming */}
-              <div>
-                 <div className="flex justify-center items-center gap-2 mb-4">
-                    <span className="text-xs font-bold text-gray-300">Competitive Programming</span>
-                 </div>
-                 <div className="flex items-center gap-6">
-                    <div className="relative w-16 h-16 ml-2">
-                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={isDarkMode ? "#333" : "#eee"} strokeWidth="5" />
-                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#3b82f6" strokeWidth="5" strokeDasharray="100, 100" />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm font-bold text-white">22</span>
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-2">
-                       <div className="flex justify-between items-center px-1"><span className="text-xs font-bold text-emerald-500">CodeChef</span><span className="text-xs text-white">22</span></div>
-                    </div>
-                 </div>
-              </div>
-
+              {!leetcodeStats && !gfgStats && (
+                <div className="flex flex-col items-center justify-center py-10 opacity-50">
+                  <Trophy size={32} className="mb-3 text-gray-400" />
+                  <p className="text-sm text-gray-400 text-center">Link LeetCode or GFG in Edit Profile to see stats.</p>
+                </div>
+              )}
            </div>
         </div>
+
       </div>
     );
   };
+
 
   // --- New Render Layout ---
   return (
