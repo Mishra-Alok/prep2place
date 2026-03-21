@@ -2116,13 +2116,14 @@ export default function CodingProfile() {
            
            {/* GitHub Submissions Graph */}
            <div className={`col-span-1 md:col-span-2 p-6 rounded-2xl border flex flex-col justify-center ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
-              <div className="flex justify-between items-center mb-4">
-                 <div className="flex gap-4">
-                    <span className="text-xs font-bold text-gray-400">Submissions <span className="text-white ml-1">{(profileData.socialLinks?.github && githubStats?.totalContributions) || 0}</span></span>
-                    <span className="text-xs font-bold text-gray-400">Max Streak <span className="text-white ml-1">{githubStats?.maxStreak || 0}</span></span>
-                 </div>
-                 <select className="bg-transparent text-xs text-gray-400 border border-white/10 rounded px-2 py-1 outline-none"><option>Current</option></select>
-              </div>
+               <div className="flex justify-between items-center mb-4">
+                  <p className={`text-xs font-black uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GitHub Contribution Graph</p>
+                  {profileData.socialLinks?.github && (
+                    <a href={`https://github.com/${profileData.socialLinks.github}`} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
+                      @{profileData.socialLinks.github} <ExternalLink size={10}/>
+                    </a>
+                  )}
+               </div>
               {profileData.socialLinks?.github ? (
                 <div className="w-full overflow-x-auto custom-scrollbar pb-2">
                   <div className="min-w-[500px] flex justify-center mix-blend-multiply dark:mix-blend-screen">
