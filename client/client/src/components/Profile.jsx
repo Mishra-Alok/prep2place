@@ -102,6 +102,9 @@ export default function CodingProfile() {
   const [activeTab, setActiveTab] = useState(urlTab);
   const [tabHistory, setTabHistory] = useState([]);
   const [isPublicProfile, setIsPublicProfile] = useState(true);
+  const [isStatsOpen, setIsStatsOpen] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState(null);
 
   // Sync state if URL changes directly
   useEffect(() => {
@@ -110,20 +113,6 @@ export default function CodingProfile() {
       setActiveTab(tab);
     }
   }, [searchParams]);
-
-  // Intercept browser back button — if editing, go back to dashboard view instead of leaving page
-  useEffect(() => {
-    const onPopState = (e) => {
-      if (isEditing) {
-        e.preventDefault();
-        window.history.pushState(null, '', window.location.href);
-        cancelEditRef.current?.();
-      }
-    };
-    window.history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
-  }, [isEditing]);
 
   const goToTab = (tab) => {
     if (tab === activeTab) return;
@@ -143,10 +132,7 @@ export default function CodingProfile() {
     }
   };
 
-  const [isStatsOpen, setIsStatsOpen] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const cancelEditRef = useRef(null);
-  const [editForm, setEditForm] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState(null); // null | 'checking' | 'available' | 'taken'
@@ -484,8 +470,6 @@ export default function CodingProfile() {
     setEditForm(profileData);
     setIsEditing(false);
   };
-  // Keep a ref so the popstate handler can always access the latest cancelEdit
-  useEffect(() => { cancelEditRef.current = cancelEdit; });
 
 
   const handleRefreshAll = async () => {
