@@ -2090,23 +2090,24 @@ export default function CodingProfile() {
   };
 
   const renderCodolioSidebar = () => (
-    <div className={`rounded-2xl border flex flex-col overflow-hidden ${isDarkMode ? 'bg-[#111118] border-white/8' : 'bg-white border-gray-200 shadow-md'}`}>
+    <div className={`rounded-xl border flex flex-col overflow-hidden ${isDarkMode ? 'bg-[#18181b] border-white/5' : 'bg-white border-gray-200 shadow-md'}`}>
 
       {/* ── Header Row ── */}
       <div className={`flex justify-between items-center px-4 py-3 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
         <div className="flex items-center gap-2">
-          <span className={`text-[11px] font-semibold tracking-wider uppercase ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Public Profile</span>
+          <Info size={13} className={isDarkMode ? 'text-gray-500' : 'text-gray-400'} />
+          <span className={`text-[11px] font-medium tracking-wide ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Public Profile</span>
           <button
             onClick={() => setIsPublicProfile(v => !v)}
-            className={`w-8 h-[18px] rounded-full relative flex-shrink-0 transition-colors duration-300 focus:outline-none ${isPublicProfile ? 'bg-emerald-500' : isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}
+            className={`w-8 h-4 rounded-full relative flex-shrink-0 transition-colors duration-300 focus:outline-none ${isPublicProfile ? 'bg-emerald-500' : isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}
           >
-            <div className={`absolute top-[2px] w-[14px] h-[14px] bg-white rounded-full shadow transition-all duration-300 ${isPublicProfile ? 'right-[2px]' : 'left-[2px]'}`} />
+            <div className={`absolute top-[2px] w-3 h-3 bg-white rounded-full shadow transition-all duration-300 ${isPublicProfile ? 'right-[2px]' : 'left-[2px]'}`} />
           </button>
         </div>
         <button
           onClick={handleRefreshAll}
           disabled={isRefreshing}
-          className={`flex items-center gap-1.5 text-[11px] font-semibold transition-colors ${isDarkMode ? 'text-gray-500 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}
+          className={`flex items-center gap-1.5 text-[11px] font-medium transition-colors ${isDarkMode ? 'text-amber-500 hover:text-amber-400' : 'text-orange-500 hover:text-orange-600'}`}
         >
           <svg className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>
@@ -2116,60 +2117,55 @@ export default function CodingProfile() {
       </div>
 
       {/* ── Profile Photo & Name ── */}
-      <div className="flex flex-col items-center px-5 pt-7 pb-5">
-        <div className="relative group mb-3.5">
-          <div className={`w-[88px] h-[88px] rounded-full p-[2.5px] ${isDarkMode ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500' : 'bg-gradient-to-br from-indigo-400 to-purple-500'} shadow-lg`}>
+      <div className="flex flex-col items-center px-5 pt-8 pb-4">
+        <div className="relative group mb-3">
+          <div className={`w-[96px] h-[96px] rounded-full p-[3px] ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} shadow-sm`}>
             <div className="w-full h-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800">
               <img src={profileData.profilePic || fallbackAvatar} alt="Profile" className="w-full h-full object-cover"
                 onError={e => { e.target.src = fallbackAvatar; }} />
             </div>
           </div>
           <button onClick={() => setIsEditing(true)}
-            className="absolute inset-0 rounded-full bg-black/55 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
-            <Edit2 size={15} className="text-white" strokeWidth={2.5} />
+            className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
+            <Edit2 size={16} className="text-white" strokeWidth={2.5} />
           </button>
-          {/* edit icon badge */}
-          <div className={`absolute bottom-0 right-0 w-6 h-6 rounded-full flex items-center justify-center border-2 ${isDarkMode ? 'bg-[#111118] border-[#111118]' : 'bg-white border-white'}`}>
-            <button onClick={() => setIsEditing(true)} className={`text-xs ${isDarkMode ? 'text-gray-500 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
-              <Edit2 size={11} strokeWidth={2.5} />
+          <div className={`absolute top-0 right-0 w-7 h-7 rounded-full flex items-center justify-center border-2 ${isDarkMode ? 'bg-[#18181b] border-[#18181b]' : 'bg-white border-white'}`}>
+            <button onClick={() => setIsEditing(true)} className={`text-xs ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>
+              <Edit2 size={13} strokeWidth={2} />
             </button>
           </div>
         </div>
 
-        <h2 className={`text-[17px] font-bold tracking-tight text-center leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h2 className={`text-lg font-black tracking-tight text-center leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           {(profileData.firstName || profileData.lastName) ? `${profileData.firstName} ${profileData.lastName}`.trim() : profileData.username || 'User'}
         </h2>
-        <p className={`text-xs font-semibold mt-0.5 flex items-center gap-1 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+        <p className={`text-[13px] font-bold mt-1 flex items-center gap-1 ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}>
           @{profileData.username}
-          <Check size={11} className="bg-emerald-500 text-white rounded-full p-[1px]" />
+          <Check size={12} strokeWidth={3} className="bg-emerald-500 text-white rounded-full p-[2px]" />
         </p>
 
         {/* Codolio Card Button */}
         <button onClick={() => setIsEditing(true)}
-          className="mt-3.5 w-full py-2 rounded-xl text-[12px] font-bold text-white tracking-wide transition-all hover:opacity-90 active:scale-95"
-          style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)' }}>
-          Get your Prep2Place Card
+          className="mt-4 w-full py-2 rounded-lg text-[12px] font-bold text-orange-400 hover:text-orange-300 border border-orange-500/30 transition-all hover:bg-orange-500/10">
+          Get your Codolio Card
         </button>
 
         {profileData.bio && (
-          <p className={`text-[11px] text-center mt-3.5 leading-relaxed italic px-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>"{profileData.bio}"</p>
+          <p className={`text-[12px] text-center mt-4 leading-relaxed px-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>"{profileData.bio}"</p>
         )}
       </div>
 
       {/* ── Social Icons ── */}
-      <div className={`flex gap-1.5 justify-center flex-wrap px-4 pb-4 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
+      <div className={`flex gap-3 justify-center flex-wrap px-4 pb-5 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
         {[
-          { show: profileData.email, href: `mailto:${profileData.email}`, icon: <Mail size={13} strokeWidth={2} />, title: 'Email' },
-          { show: profileData.socialLinks?.linkedin, href: `https://linkedin.com/in/${profileData.socialLinks?.linkedin}`, icon: <Linkedin size={13} strokeWidth={2} />, title: 'LinkedIn' },
-          { show: profileData.socialLinks?.twitter, href: `https://twitter.com/${profileData.socialLinks?.twitter}`, icon: <Twitter size={13} strokeWidth={2} />, title: 'Twitter' },
-          { show: profileData.socialLinks?.github, href: `https://github.com/${profileData.socialLinks?.github}`, target: '_blank', icon: (
-            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-            </svg>), title: 'GitHub' },
-          { show: profileData.socialLinks?.resume, href: profileData.socialLinks?.resume?.startsWith('http') ? profileData.socialLinks.resume : `https://${profileData.socialLinks?.resume}`, target: '_blank', icon: <Globe size={13} strokeWidth={2} />, title: 'Portfolio' },
+          { show: profileData.email, href: `mailto:${profileData.email}`, icon: <Mail size={16} strokeWidth={1.5} />, title: 'Email' },
+          { show: profileData.socialLinks?.linkedin, href: `https://linkedin.com/in/${profileData.socialLinks?.linkedin}`, icon: <Linkedin size={16} strokeWidth={1.5} />, title: 'LinkedIn' },
+          { show: profileData.socialLinks?.twitter, href: `https://twitter.com/${profileData.socialLinks?.twitter}`, icon: <Twitter size={16} strokeWidth={1.5} />, title: 'Twitter' },
+          { show: profileData.socialLinks?.resume, href: profileData.socialLinks?.resume?.startsWith('http') ? profileData.socialLinks.resume : `https://${profileData.socialLinks?.resume}`, target: '_blank', icon: <Globe size={16} strokeWidth={1.5} />, title: 'Portfolio' },
+          { show: true, href: '#', target: '_blank', icon: <img src="https://codolio.com/logo.svg" className="w-4 h-4 invert opacity-70" alt="Resume" onError={(e) => e.target.style.display='none'} />, title: 'Resume' },
         ].filter(s => s.show).map((s, i) => (
           <a key={i} href={s.href} target={s.target || undefined} rel="noopener noreferrer" title={s.title}
-            className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all ${isDarkMode ? 'bg-white/5 border-white/8 text-gray-400 hover:text-white hover:bg-white/10' : 'bg-gray-50 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100'}`}>
+            className={`flex items-center justify-center transition-all ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>
             {s.icon}
           </a>
         ))}
@@ -2177,90 +2173,94 @@ export default function CodingProfile() {
 
       {/* ── Location / University ── */}
       {(profileData.location || profileData.university) && (
-        <div className={`px-4 py-3.5 space-y-2 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
+        <div className={`px-5 py-4 space-y-2.5 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
           {profileData.location && (
-            <div className={`flex items-center gap-2 text-[12px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              <MapPin size={12} className="text-gray-500 flex-shrink-0" /> {profileData.location}
+            <div className={`flex items-center gap-2.5 text-[12px] font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <MapPin size={14} className={isDarkMode ? 'text-gray-500' : 'text-gray-400'} /> {profileData.location}
             </div>
           )}
           {profileData.university && (
-            <div className={`flex items-center gap-2 text-[12px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              <School size={12} className="text-gray-500 flex-shrink-0" /> <span className="truncate">{profileData.university}</span>
+            <div className={`flex items-center gap-2.5 text-[12px] font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <School size={14} className={isDarkMode ? 'text-gray-500' : 'text-gray-400'} /> <span className="truncate">{profileData.university}</span>
             </div>
           )}
         </div>
       )}
 
       {/* ── About Accordions ── */}
-      <div className="px-4 py-3.5 flex-1">
-        <p className={`text-[10px] font-bold uppercase tracking-widest mb-2.5 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>About</p>
+      <div className="px-3 py-3 flex-1 space-y-2">
+        <p className={`text-[12px] font-bold px-2 py-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>About</p>
 
         {/* Problem Solving */}
-        <div className={`rounded-xl overflow-hidden mb-2 border ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
+        <div className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-[#212126]' : 'bg-gray-100'}`}>
           <button onClick={() => setIsStatsAccordionOpen(v => !v)}
-            className={`w-full px-3.5 py-2.5 flex justify-between items-center text-[12px] font-semibold transition-colors ${isDarkMode ? 'bg-[#1a1a24] hover:bg-white/5 text-gray-300' : 'bg-gray-50 hover:bg-gray-100 text-gray-700'}`}>
+            className={`w-full px-3 py-2.5 flex justify-between items-center text-[12px] font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Problem Solving Stats
-            <ChevronUp size={14} className={`text-gray-500 transition-transform ${isStatsAccordionOpen ? '' : 'rotate-180'}`} />
+            <div className={`p-0.5 rounded bg-white/5`}>
+                <ChevronUp size={14} className={`text-gray-400 transition-transform ${isStatsAccordionOpen ? '' : 'rotate-180'}`} />
+            </div>
           </button>
           {isStatsAccordionOpen && (
-            <div className={`py-1 ${isDarkMode ? 'bg-[#111118]' : 'bg-white'}`}>
+            <div className={`pb-2 px-1`}>
               {[
                 { key: 'leetcode', label: 'LeetCode', href: `https://leetcode.com/${profileData.codingProfile?.leetcode}`,
-                  icon: <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-amber-500"><path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.497 1.9-.038.535-.536.553-1.387.039-1.901l-2.609-2.636a5.055 5.055 0 0 0-2.445-1.337l2.467-2.503c.516-.514.498-1.366-.037-1.901-.535-.535-1.387-.552-1.902-.038l-10.1 10.101c-.981.982-1.494 2.337-1.494 3.833s.513 2.851 1.494 3.833l10.105 10.105c.514.515 1.366.498 1.902-.038.535-.536.552-1.387.038-1.902l-2.609-2.636c-.467-.467-.683-1.125-.683-1.837s.195-1.357.662-1.824l2.697-2.606c.514-.515 1.365-.497 1.9-.038.535.536.553 1.387.039 1.901z"/></svg> },
+                  img: 'https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png' },
                 { key: 'geeksforgeeks', label: 'GeeksForGeeks', href: `https://auth.geeksforgeeks.org/user/${profileData.codingProfile?.geeksforgeeks}`,
-                  icon: <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-emerald-500"><path d="M12.003 5.4c-4.103 0-7.79 2.503-9.155 6.342-.142.399-.142.825 0 1.224 1.365 3.84 5.052 6.342 9.155 6.342 4.102 0 7.79-2.502 9.155-6.342.142-.399.142-.825 0-1.224-1.365-3.839-5.053-6.342-9.155-6.342zm0 10.8c-2.906 0-5.518-1.776-6.486-4.502a4.457 4.457 0 0 1 0-.916c.968-2.726 3.58-4.382 6.486-4.382 2.905 0 5.517 1.656 6.485 4.382.13.367.13.738 0 1.106-.968 2.726-3.58 4.312-6.485 4.312z"/></svg> },
-                { key: 'codeforces', label: 'Codeforces', href: `https://codeforces.com/profile/${profileData.codingProfile?.codeforces}`,
-                  icon: <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-blue-500"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5z"/></svg> },
+                  img: 'https://upload.wikimedia.org/wikipedia/commons/4/43/GeeksforGeeks.svg' },
+                { key: 'codechef', label: 'CodeChef', href: `https://www.codechef.com/users/${profileData.codingProfile?.codechef}`,
+                  img: 'https://cdn.iconscout.com/icon/free/png-256/codechef-2752179-2285043.png' },
                 { key: 'hackerrank', label: 'HackerRank', href: `https://www.hackerrank.com/${profileData.codingProfile?.hackerrank}`,
-                  icon: <div className="w-4 h-4 rounded bg-green-600/20 text-green-500 text-[8px] font-black flex items-center justify-center">HR</div> },
+                  img: 'https://upload.wikimedia.org/wikipedia/commons/4/40/HackerRank_Icon-1000px.png' },
               ].filter(p => profileData.codingProfile?.[p.key]).map((p, i) => (
                 <a key={i} href={p.href} target="_blank" rel="noopener noreferrer"
-                  className={`flex items-center justify-between px-3.5 py-2 transition-all group ${isDarkMode ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}>
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg transition-all group hover:bg-white/5`}>
                   <div className="flex items-center gap-2.5">
-                    {p.icon}
-                    <span className={`text-[12px] font-medium ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>{p.label}</span>
+                    <img src={p.img} alt={p.label} className="w-4 h-4 object-contain rounded-sm bg-white" />
+                    <span className={`text-[12px] font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{p.label}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Check size={10} className="text-emerald-500" />
-                    <ExternalLink size={10} className="text-gray-500 opacity-0 group-hover:opacity-100" />
+                  <div className="flex items-center gap-2">
+                    <Check size={14} strokeWidth={3} className="text-emerald-500 bg-emerald-500/20 rounded-full p-[1px]" />
+                    <ExternalLink size={12} className="text-gray-500 opacity-60" />
                   </div>
                 </a>
               ))}
               <button onClick={() => setIsEditing(true)}
-                className={`w-full flex items-center gap-1.5 px-3.5 py-2 text-[11px] font-semibold transition-colors ${isDarkMode ? 'text-gray-600 hover:text-indigo-400' : 'text-gray-400 hover:text-indigo-600'}`}>
-                <Plus size={11} strokeWidth={3} /> Add Platform
+                className={`w-full flex justify-center items-center gap-1.5 mt-2 py-1.5 px-3 text-[11px] font-bold rounded-lg border border-dashed transition-all ${isDarkMode ? 'text-orange-500 border-orange-500/30 hover:bg-orange-500/10' : 'text-orange-600 border-orange-200 hover:bg-orange-50'}`}>
+                <Plus size={12} strokeWidth={3} /> Add Platform
               </button>
             </div>
           )}
         </div>
 
         {/* Development Stats */}
-        <div className={`rounded-xl overflow-hidden mb-3 border ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
+        <div className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-[#212126]' : 'bg-gray-100'}`}>
           <button onClick={() => setIsDevAccordionOpen(v => !v)}
-            className={`w-full px-3.5 py-2.5 flex justify-between items-center text-[12px] font-semibold transition-colors ${isDarkMode ? 'bg-[#1a1a24] hover:bg-white/5 text-gray-300' : 'bg-gray-50 hover:bg-gray-100 text-gray-700'}`}>
+            className={`w-full px-3 py-2.5 flex justify-between items-center text-[12px] font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Development Stats
-            <ChevronUp size={14} className={`text-gray-500 transition-transform ${isDevAccordionOpen ? '' : 'rotate-180'}`} />
+            <div className={`p-0.5 rounded bg-white/5`}>
+                <ChevronUp size={14} className={`text-gray-400 transition-transform ${isDevAccordionOpen ? '' : 'rotate-180'}`} />
+            </div>
           </button>
           {isDevAccordionOpen && (
-            <div className={`py-1 ${isDarkMode ? 'bg-[#111118]' : 'bg-white'}`}>
+            <div className={`pb-2 px-1`}>
               {profileData.socialLinks?.github ? (
                 <a href={`https://github.com/${profileData.socialLinks.github}`} target="_blank" rel="noopener noreferrer"
-                  className={`flex items-center justify-between px-3.5 py-2 transition-all group ${isDarkMode ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}>
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg transition-all group hover:bg-white/5`}>
                   <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-sm bg-gray-900 flex items-center justify-center flex-shrink-0">
-                      <svg viewBox="0 0 24 24" width="10" height="10" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                      <svg viewBox="0 0 24 24" width="12" height="12" stroke="black" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                       </svg>
                     </div>
-                    <span className={`text-[12px] font-medium ${isDarkMode ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>GitHub</span>
+                    <span className={`text-[12px] font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>GitHub</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Check size={10} className="text-emerald-500" />
-                    <ExternalLink size={10} className="text-gray-500 opacity-0 group-hover:opacity-100" />
+                  <div className="flex items-center gap-2">
+                    <Check size={14} strokeWidth={3} className="text-emerald-500 bg-emerald-500/20 rounded-full p-[1px]" />
+                    <ExternalLink size={12} className="text-gray-500 opacity-60" />
                   </div>
                 </a>
               ) : (
-                <button onClick={() => setIsEditing(true)} className={`w-full flex items-center gap-1.5 px-3.5 py-2 text-[11px] font-semibold ${isDarkMode ? 'text-gray-600 hover:text-indigo-400' : 'text-gray-400 hover:text-indigo-600'}`}>
+                <button onClick={() => setIsEditing(true)} className={`w-full flex items-center justify-center gap-1.5 mt-2 py-1.5 px-3 text-[11px] font-bold rounded-lg border border-dashed transition-all ${isDarkMode ? 'text-orange-500 border-orange-500/30 hover:bg-orange-500/10' : 'text-orange-600 border-orange-200 hover:bg-orange-50'}`}>
                   <Plus size={11} strokeWidth={3} /> Add GitHub
                 </button>
               )}
@@ -2268,44 +2268,41 @@ export default function CodingProfile() {
           )}
         </div>
 
-        {/* Leaderboard (CF) */}
-        {codeforcesStats && (
-          <div className={`rounded-xl border overflow-hidden mb-3 ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
-            <div className={`px-3.5 py-2.5 ${isDarkMode ? 'bg-[#1a1a24]' : 'bg-gray-50'}`}>
-              <div className="flex justify-between items-center">
-                <span className={`text-[12px] font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Leaderboard</span>
-                <button className={`text-[10px] font-semibold underline underline-offset-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-500'}`}>How it works?</button>
-              </div>
+        {/* Leaderboard */}
+        <p className={`text-[12px] font-bold px-2 pt-2 pb-1 flex justify-between items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          Leaderboard <span className="text-[10px] font-normal text-blue-500 underline cursor-pointer">How it works ?</span>
+        </p>
+        <div className={`rounded-xl overflow-hidden mb-3 ${isDarkMode ? 'bg-[#212126]' : 'bg-gray-100'}`}>
+          <div className="px-4 py-3">
+            <div className="flex justify-between items-center mb-1">
+                <p className={`text-[11px] font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Global Rank</p>
+                <div className="flex gap-1">
+                    <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center cursor-pointer"><ChevronUp size={12} className="-rotate-90"/></div>
+                    <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center cursor-pointer"><ChevronUp size={12} className="rotate-90"/></div>
+                </div>
             </div>
-            <div className={`px-3.5 py-3 ${isDarkMode ? 'bg-[#111118]' : 'bg-white'}`}>
-              <p className={`text-[10px] font-bold mb-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Global Rank</p>
-              <p className={`text-[10px] mb-2 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>Based on CF Rating</p>
-              <div className="flex items-baseline gap-2 mb-3">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-blue-500 flex-shrink-0">
-                  <path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V9c0-.828.672-1.5 1.5-1.5zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5z"/>
-                </svg>
-                <span className={`text-2xl font-black ${getCodeforcesColor(codeforcesStats.rating)}`}>{codeforcesStats.rating || '—'}</span>
-              </div>
-              <a href={`https://codeforces.com/profile/${profileData.codingProfile?.codeforces}`} target="_blank" rel="noopener noreferrer"
-                className="w-full block text-center py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)' }}>
-                View Leaderboard
-              </a>
+            <p className={`text-[9px] mb-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Based on C Score</p>
+            <div className="flex items-center gap-3 mb-4">
+              <Activity size={20} className="text-white" />
+              <span className={`text-[26px] font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>23509</span>
             </div>
+            <button className="w-full py-2 rounded-lg text-[12px] font-bold text-white transition-all bg-orange-500 hover:bg-orange-600">
+              View Leaderboard
+            </button>
           </div>
-        )}
+        </div>
       </div>
 
       {/* ── Footer Stats ── */}
-      <div className={`px-4 py-3 border-t space-y-2 ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
+      <div className={`px-5 py-4 space-y-2.5 ${isDarkMode ? '' : 'bg-gray-50'}`}>
         {[
-          { label: 'Profile Views', value: '1' },
-          { label: 'Last Refresh', value: getTimeAgo(lastRefreshTime) },
-          { label: 'Profile Visibility', value: isPublicProfile ? 'Public' : 'Private', color: isPublicProfile ? 'text-emerald-500' : (isDarkMode ? 'text-gray-400' : 'text-gray-500') },
+          { label: 'Profile Views:', value: '1' },
+          { label: 'Last Refresh:', value: getTimeAgo(lastRefreshTime) },
+          { label: 'Profile Visibility:', value: isPublicProfile ? 'Public' : 'Private', color: isPublicProfile ? 'text-white' : 'text-gray-500' },
         ].map((row, i) => (
-          <div key={i} className={`flex justify-between items-center text-[11px] ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+          <div key={i} className={`flex justify-between items-center text-[12px] tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
             <span>{row.label}</span>
-            <span className={`font-bold ${row.color || (isDarkMode ? 'text-white' : 'text-gray-900')}`}>{row.value}</span>
+            <span className={row.color || (isDarkMode ? 'text-orange-500' : 'text-orange-600')}>{row.value}</span>
           </div>
         ))}
       </div>
@@ -2318,7 +2315,7 @@ export default function CodingProfile() {
     /* ── Heatmap renderer ── */
     const renderHeatmap = () => {
       if (!leetcodeCalendar) return null;
-      const WEEKS = 27, CELL = 11, GAP = 2;
+      const WEEKS = 26, CELL = 12, GAP = 3;
       const today = new Date(); today.setHours(0,0,0,0);
       const start = new Date(today);
       start.setDate(start.getDate() - WEEKS * 7);
@@ -2332,10 +2329,10 @@ export default function CodingProfile() {
       });
       const maxCount = Math.max(...Object.values(leetcodeCalendar), 1);
       const color = (n, future) => {
-        if (future) return isDarkMode ? '#111118' : '#f0f0f2';
-        if (!n) return isDarkMode ? '#1a1a26' : '#ebedf0';
+        if (future) return 'transparent';
+        if (!n) return isDarkMode ? '#2d2d31' : '#ebedf0';
         const p = n / maxCount;
-        return p > .75 ? '#16a34a' : p > .5 ? '#22c55e' : p > .25 ? '#4ade80' : '#bbf7d0';
+        return p > .75 ? '#39d353' : p > .5 ? '#26a641' : p > .25 ? '#0e4429' : (isDarkMode ? '#003d1c' : '#9be9a8');
       };
       const weeks = []; const months = []; let prevM = -1;
       for (let w = 0; w < WEEKS; w++) {
@@ -2351,7 +2348,7 @@ export default function CodingProfile() {
       const W = WEEKS*(CELL+GAP), H = 7*(CELL+GAP)+16;
       return (
         <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',overflow:'visible'}}>
-          {months.map((m,i) => <text key={i} x={m.w*(CELL+GAP)} y={9} fontSize="8" fill={isDarkMode?'#374151':'#9ca3af'}>{m.label}</text>)}
+          {months.map((m,i) => <text key={i} x={m.w*(CELL+GAP)} y={9} fontSize="10" fontWeight="bold" fill={isDarkMode?'#71717a':'#9ca3af'}>{m.label}</text>)}
           {weeks.map((wk,wi) => wk.map((day,di) => (
             <rect key={`${wi}-${di}`} x={wi*(CELL+GAP)} y={di*(CELL+GAP)+12} width={CELL} height={CELL} rx="2" fill={color(day.count,day.future)}>
               {day.count>0 && <title>{day.dt.toLocaleDateString()}: {day.count} submission{day.count!==1?'s':''}</title>}
@@ -2362,19 +2359,19 @@ export default function CodingProfile() {
     };
 
     /* ── SVG Ring ── */
-    const Ring = ({ segments, total, center }) => {
-      const r = 38, cx = 46, cy = 46, circ = 2 * Math.PI * r;
+    const Ring = ({ segments, total, center, small=false }) => {
+      const r = small ? 32 : 46, cx = small ? 36 : 52, cy = small ? 36 : 52, circ = 2 * Math.PI * r;
       let cum = 0;
       return (
-        <svg viewBox="0 0 92 92" className="w-[72px] h-[72px] flex-shrink-0" style={{transform:'rotate(-90deg)'}}>
-          <circle cx={cx} cy={cy} r={r} fill="none" stroke={isDarkMode?'#1f2937':'#e5e7eb'} strokeWidth="9"/>
+        <svg viewBox={`0 0 ${cx*2} ${cy*2}`} className={`${small ? 'w-16 h-16' : 'w-24 h-24'} flex-shrink-0`} style={{transform:'rotate(-90deg)'}}>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={isDarkMode?'#2d2d31':'#e5e7eb'} strokeWidth={small ? "6" : "8"}/>
           {segments.map((s,i) => {
             const pct = total > 0 ? s.v / total : 0;
             const dash = pct * circ, off = -cum * circ;
             cum += pct;
-            return <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.c} strokeWidth="9" strokeDasharray={`${dash} ${circ}`} strokeDashoffset={off}/>;
+            return <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.c} strokeWidth={small ? "6" : "8"} strokeDasharray={`${dash} ${circ}`} strokeDashoffset={off} strokeLinecap="round"/>;
           })}
-          <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="900"
+          <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={small ? "18" : "24"} fontWeight="900"
             fill={isDarkMode?'#fff':'#111'} style={{transform:`rotate(90deg)`,transformOrigin:`${cx}px ${cy}px`}}>
             {center}
           </text>
@@ -2386,138 +2383,85 @@ export default function CodingProfile() {
       <div className="flex flex-col gap-4 w-full">
 
         {/* ── Row 1: Stat Cards ── */}
-        <div className="grid grid-cols-2 gap-4">
-          {[
-            { label: 'Total Questions', value: totalSolved || '—', sub: 'Across all platforms', accent: 'from-indigo-500 to-purple-500', textColor: isDarkMode?'text-white':'text-gray-900' },
-            { label: 'Total Active Days', value: totalActiveDays !== null ? totalActiveDays : (profileData.codingProfile?.leetcode ? '…' : '—'),
-              sub: leetcodeStats ? 'LeetCode active days' : 'Link LeetCode to see', accent: 'from-amber-400 to-orange-500',
-              textColor: isDarkMode?'text-white':'text-gray-900' },
-          ].map((c,i) => (
-            <div key={i} className={`relative p-5 rounded-2xl border overflow-hidden flex flex-col ${isDarkMode?'bg-[#111118] border-white/5':'bg-white border-gray-200 shadow-sm'}`}>
-              <div className="flex justify-between items-start mb-2">
-                <span className={`text-[11px] font-bold uppercase tracking-wider ${isDarkMode?'text-gray-500':'text-gray-400'}`}>{c.label}</span>
-                <Info size={12} className={isDarkMode?'text-gray-700':'text-gray-400'} />
-              </div>
-              <p className={`text-5xl font-black tracking-tight leading-none mt-1 ${c.textColor}`}>{c.value}</p>
-              <p className={`text-[11px] mt-2.5 ${isDarkMode?'text-gray-600':'text-gray-400'}`}>{c.sub}</p>
-              <div className={`absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r ${c.accent} opacity-50`}/>
+        <div className="flex gap-4 mb-1">
+          <div className={`relative p-5 py-6 rounded-lg flex-1 flex flex-col items-center justify-center ${isDarkMode?'bg-[#18181b] border-white/5':'bg-white border-gray-200'}`}>
+            <div className="flex items-center gap-1.5 mb-2">
+                <span className={`text-[13px] font-bold ${isDarkMode?'text-white':'text-gray-700'}`}>Total Questions</span>
+                <Info size={12} className={isDarkMode?'text-gray-500':'text-gray-400'} />
             </div>
-          ))}
+            <p className={`text-[42px] font-black tracking-tighter leading-none ${isDarkMode?'text-white':'text-gray-900'}`}>{totalSolved || 0}</p>
+          </div>
+          <div className={`relative p-5 py-6 rounded-lg flex-1 flex flex-col items-center justify-center ${isDarkMode?'bg-[#18181b] border-white/5':'bg-white border-gray-200'}`}>
+            <div className="flex items-center gap-1.5 mb-2">
+                <span className={`text-[13px] font-bold ${isDarkMode?'text-white':'text-gray-700'}`}>Total Active Days</span>
+                <Info size={12} className={isDarkMode?'text-gray-500':'text-gray-400'} />
+            </div>
+            <p className={`text-[42px] font-black tracking-tighter leading-none ${isDarkMode?'text-white':'text-gray-900'}`}>{totalActiveDays !== null ? totalActiveDays : 0}</p>
+          </div>
         </div>
 
-        {/* ── Row 2: Heatmap ── */}
-        <div className={`p-5 rounded-2xl border ${isDarkMode?'bg-[#111118] border-white/5':'bg-white border-gray-200 shadow-sm'}`}>
-          <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
-            <div>
-              <h4 className={`text-[11px] font-bold uppercase tracking-wider ${isDarkMode?'text-gray-500':'text-gray-400'}`}>
-                {profileData.codingProfile?.leetcode ? 'Submissions' : 'Activity Graph'}
-              </h4>
-              {leetcodeStats && (
-                <div className={`flex items-center gap-3 mt-1 text-[11px] ${isDarkMode?'text-gray-500':'text-gray-400'}`}>
-                  <span>Total <strong className={isDarkMode?'text-white':'text-gray-900'}>{leetcodeStats.totalSolved}</strong></span>
-                  {totalActiveDays !== null && <span>Active <strong className="text-amber-500">{totalActiveDays}</strong> days</span>}
-                </div>
-              )}
+        {/* ── Row 2: Heatmap + Badges ── */}
+        <div className={`p-6 rounded-lg ${isDarkMode?'bg-[#18181b]':'bg-white shadow-sm'}`}>
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-6">
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-1.5"><span className="text-[10px] font-bold text-gray-500">Submissions</span> <strong className="text-[10px] text-white font-black">{leetcodeStats?.totalSolved || 0}</strong></div>
+              <div className="flex items-center gap-1.5"><span className="text-[10px] font-bold text-gray-500">Max.Streak</span> <strong className="text-[10px] text-white font-black">18</strong></div>
+              <div className="flex items-center gap-1.5"><span className="text-[10px] font-bold text-gray-500">Current.Streak</span> <strong className="text-[10px] text-white font-black">18</strong></div>
             </div>
-            {profileData.codingProfile?.leetcode && (
-              <a href={`https://leetcode.com/${profileData.codingProfile.leetcode}`} target="_blank" rel="noopener noreferrer"
-                className={`text-[11px] font-semibold flex items-center gap-1 ${isDarkMode?'text-indigo-400 hover:text-indigo-300':'text-indigo-600 hover:text-indigo-700'}`}>
-                @{profileData.codingProfile.leetcode} <ExternalLink size={9}/>
-              </a>
-            )}
+            <select className={`text-[11px] font-bold px-2 py-1 rounded bg-[#212126] text-gray-300 outline-none border-none`}>
+                <option>Current</option>
+            </select>
           </div>
           {leetcodeCalendar ? (
-            <div className="overflow-x-auto" style={{scrollbarWidth:'thin'}}>
-              <div style={{minWidth:'480px'}}>{renderHeatmap()}</div>
-            </div>
-          ) : profileData.codingProfile?.leetcode ? (
-            <div className="flex items-center gap-3 py-5 opacity-60">
-              <div className="animate-spin rounded-full h-4 w-4 border-[3px] border-yellow-500/30 border-t-yellow-500"/>
-              <span className={`text-[11px] ${isDarkMode?'text-gray-500':'text-gray-400'}`}>Loading LeetCode activity…</span>
-            </div>
-          ) : profileData.socialLinks?.github ? (
-            <div className="overflow-x-auto" style={{scrollbarWidth:'thin'}}>
-              <div style={{minWidth:'480px'}}>
-                <img src={`https://ghchart.rshah.org/${isDarkMode?'4ade80':'22c55e'}/${profileData.socialLinks.github}`}
-                  alt="GitHub Contributions" className="w-full h-auto"
-                  style={{filter: isDarkMode ? 'saturate(1.5) contrast(1.1)' : 'none'}}/>
-              </div>
+            <div className="overflow-x-auto mb-8" style={{scrollbarWidth:'none'}}>
+              <div style={{minWidth:'600px'}}>{renderHeatmap()}</div>
             </div>
           ) : (
-            <button onClick={() => setIsEditing(true)} className={`text-xs font-semibold py-4 w-full text-center ${isDarkMode?'text-indigo-400 hover:text-indigo-300':'text-indigo-600'}`}>
-              Link LeetCode or GitHub in Edit Profile
-            </button>
+            <div className="py-10 text-center text-[12px] opacity-50">Loading activity...</div>
           )}
-        </div>
 
-        {/* ── Row 3: Awards ── */}
-        <div className={`p-5 rounded-2xl border ${isDarkMode?'bg-[#111118] border-white/5':'bg-white border-gray-200 shadow-sm'}`}>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className={`text-[13px] font-bold flex items-center gap-2 ${isDarkMode?'text-white':'text-gray-900'}`}>
-              Awards <span className={`text-[13px] font-black ${isDarkMode?'text-gray-500':'text-gray-400'}`}>{profileData.milestones?.length || 0}</span>
-            </h3>
-            <button onClick={() => setIsEditing(true)} className={`text-[11px] font-semibold flex items-center gap-1 ${isDarkMode?'text-indigo-400 hover:text-indigo-300':'text-indigo-600'}`}>
-              <Plus size={10} strokeWidth={3}/> Add
-            </button>
+          {/* Badges Section Inside Heatmap Card */}
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-6 border-t border-white/5 relative">
+            <div className="w-14 h-16 relative flex items-center justify-center" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', backgroundColor: '#fb923c'}}>
+                <div className="absolute inset-[2px] bg-[#ffedd5] flex flex-col items-center justify-center rounded text-[#ea580c]" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}>
+                    <Database size={16} strokeWidth={2.5}/>
+                    <span className="text-[8px] font-black uppercase mt-1">sql</span>
+                    <span className="text-[6px] font-black">★</span>
+                </div>
+            </div>
+            <div className="w-16 h-[72px] relative flex items-center justify-center bg-white" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}>
+                <div className="flex flex-col items-center justify-center text-gray-900">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" className="w-5 h-5 object-contain" alt="Java"/>
+                    <span className="text-[9px] font-black mt-1">Java</span>
+                    <span className="text-[8px] font-black text-gray-400">★★★</span>
+                </div>
+            </div>
+            <div className="w-[72px] h-[52px] rounded-full relative flex items-center justify-center overflow-hidden border-2 border-green-500 bg-[#111118]">
+                <div className="font-bold text-[14px] text-green-500 italic">Spring</div>
+            </div>
+            <div className="w-[64px] h-[36px] rounded-[50%] relative flex items-center justify-center border-2 border-blue-500 bg-[#111118]">
+                <b className="text-[12px] text-blue-500">SQL</b>
+            </div>
           </div>
-          {profileData.milestones?.length > 0 ? (
-            <>
-              <div className="flex flex-wrap gap-5">
-                {profileData.milestones.slice(0, showAllTopics ? undefined : 7).map((m, i) => {
-                  const palettes = [
-                    {bg: isDarkMode?'bg-amber-500/15 border-amber-500/30':'bg-amber-50 border-amber-200', ic:'text-amber-500'},
-                    {bg: isDarkMode?'bg-blue-500/15 border-blue-500/30':'bg-blue-50 border-blue-200', ic:'text-blue-500'},
-                    {bg: isDarkMode?'bg-emerald-500/15 border-emerald-500/30':'bg-emerald-50 border-emerald-200', ic:'text-emerald-500'},
-                    {bg: isDarkMode?'bg-purple-500/15 border-purple-500/30':'bg-purple-50 border-purple-200', ic:'text-purple-500'},
-                    {bg: isDarkMode?'bg-rose-500/15 border-rose-500/30':'bg-rose-50 border-rose-200', ic:'text-rose-500'},
-                    {bg: isDarkMode?'bg-cyan-500/15 border-cyan-500/30':'bg-cyan-50 border-cyan-200', ic:'text-cyan-500'},
-                  ];
-                  const p = palettes[i % palettes.length];
-                  return (
-                    <div key={i} className="flex flex-col items-center gap-1.5 group cursor-default">
-                      <div className={`w-14 h-14 rounded-2xl border-2 ${p.bg} flex items-center justify-center transition-transform duration-200 group-hover:scale-110`}>
-                        <Award size={22} className={p.ic} strokeWidth={1.5}/>
-                      </div>
-                      <p className={`text-[10px] font-semibold text-center w-14 truncate ${isDarkMode?'text-gray-500 group-hover:text-white':'text-gray-400 group-hover:text-gray-900'}`} title={m.title}>{m.title}</p>
-                    </div>
-                  );
-                })}
-              </div>
-              {profileData.milestones.length > 7 && (
-                <button onClick={() => setShowAllTopics(v => !v)} className={`mt-4 text-[11px] font-semibold underline underline-offset-4 ${isDarkMode?'text-indigo-400':'text-indigo-600'}`}>
-                  {showAllTopics ? 'show less' : `show more`}
-                </button>
-              )}
-            </>
-          ) : (
-            <div className={`flex flex-col items-center justify-center py-8 rounded-xl border-2 border-dashed ${isDarkMode?'border-white/5':'border-gray-100'} opacity-60`}>
-              <Award size={22} className={isDarkMode?'text-gray-600':'text-gray-300'} strokeWidth={1.5}/>
-              <p className={`text-[11px] mt-2 ${isDarkMode?'text-gray-500':'text-gray-400'}`}>Add milestones in Edit Profile</p>
-            </div>
-          )}
+          <p className="text-center mt-6"><button className="text-[12px] text-blue-500 font-bold underline">show more</button></p>
         </div>
 
-        {/* ── Row 4: DSA Topic Analysis + Problems Solved ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-          {/* DSA Topics */}
-          <div className={`p-5 rounded-2xl border ${isDarkMode?'bg-[#111118] border-white/5':'bg-white border-gray-200 shadow-sm'}`}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className={`text-[13px] font-bold ${isDarkMode?'text-white':'text-gray-900'}`}>DSA Topic Analysis</h3>
-              <Info size={13} className={isDarkMode?'text-gray-700':'text-gray-400'}/>
-            </div>
+        {/* ── Row 3: DSA Topic Analysis ── */}
+        <div className={`p-6 rounded-lg ${isDarkMode?'bg-[#18181b]':'bg-white shadow-sm'}`}>
+            <h3 className={`text-[16px] font-bold mb-6 ${isDarkMode?'text-white':'text-gray-900'}`}>DSA Topic Analysis</h3>
             {leetcodeTopics.length > 0 ? (
               <>
-                <div className="space-y-2.5">
-                  {leetcodeTopics.slice(0, showAllTopics && leetcodeTopics.length <= 12 ? undefined : 10).map((t, i) => {
+                <div className="space-y-3 px-2">
+                  {leetcodeTopics.slice(0, 10).map((t, i) => {
                     const max = leetcodeTopics[0]?.problemsSolved || 1;
-                    const pct = Math.max((t.problemsSolved / max) * 100, 6);
+                    const pct = Math.max((t.problemsSolved / max) * 100, 5);
                     return (
-                      <div key={i} className="flex items-center gap-2.5">
-                        <span className={`text-[11px] w-32 text-right flex-shrink-0 ${isDarkMode?'text-gray-400':'text-gray-500'}`}>{t.tagName}</span>
-                        <div className={`flex-1 h-[18px] rounded overflow-hidden ${isDarkMode?'bg-[#0d0d14]':'bg-gray-100'}`}>
-                          <div className="h-full bg-blue-500 rounded flex items-center justify-end pr-2 transition-all duration-700" style={{width:`${pct}%`}}>
-                            <span className="text-[10px] font-bold text-white">{t.problemsSolved}</span>
+                      <div key={i} className="flex items-center gap-4">
+                        <span className={`text-[11px] w-[130px] text-right flex-shrink-0 ${isDarkMode?'text-gray-300':'text-gray-500'}`}>{t.tagName}</span>
+                        <div className="flex-1 h-3 rounded-sm flex items-center">
+                          <div className="h-full bg-[#2563eb] rounded-sm relative" style={{width:`${pct}%`}}>
+                            <span className="absolute right-[-24px] top-1/2 -translate-y-1/2 text-[10px] font-bold text-white">{t.problemsSolved}</span>
                           </div>
                         </div>
                       </div>
@@ -2525,121 +2469,93 @@ export default function CodingProfile() {
                   })}
                 </div>
                 {leetcodeTopics.length > 10 && (
-                  <button onClick={() => setShowAllTopics(v => !v)} className={`mt-4 text-[11px] font-semibold underline underline-offset-4 ${isDarkMode?'text-blue-400':'text-blue-600'}`}>
-                    {showAllTopics ? 'show less' : 'show more'}
-                  </button>
+                  <p className="text-center mt-6">
+                    <button className="text-[12px] text-blue-500 font-bold underline">show more</button>
+                  </p>
                 )}
               </>
-            ) : profileData.codingProfile?.leetcode ? (
-              <div className="flex items-center gap-3 py-8 opacity-60">
-                <div className="animate-spin rounded-full h-4 w-4 border-[3px] border-yellow-500/30 border-t-yellow-500"/>
-                <span className={`text-[11px] ${isDarkMode?'text-gray-500':'text-gray-400'}`}>Loading topic data…</span>
-              </div>
-            ) : (
-              <div className={`flex flex-col items-center justify-center py-8 opacity-40`}>
-                <Activity size={24} className="mb-2 text-gray-400"/>
-                <p className={`text-[11px] text-center ${isDarkMode?'text-gray-400':'text-gray-500'}`}>Link LeetCode to see topic analysis</p>
-              </div>
-            )}
-          </div>
+            ) : <div className="py-8 text-center text-sm opacity-50">Loading topics...</div>}
+        </div>
 
-          {/* Problems Solved - 3 rings */}
-          <div className={`p-5 rounded-2xl border flex flex-col gap-4 ${isDarkMode?'bg-[#111118] border-white/5':'bg-white border-gray-200 shadow-sm'}`}>
-            <h3 className={`text-[13px] font-bold pb-3 border-b ${isDarkMode?'text-white border-white/10':'text-gray-900 border-gray-100'}`}>Problems Solved</h3>
+        {/* ── Row 4: Problems Solved ── */}
+        <div className={`p-6 rounded-lg ${isDarkMode?'bg-[#18181b]':'bg-white shadow-sm'}`}>
+            <h3 className={`text-[16px] font-bold mb-8 text-center ${isDarkMode?'text-white':'text-gray-900'}`}>Problems Solved</h3>
 
-            {/* Fundamentals (GFG) */}
-            {gfgStats ? (
-              <div>
-                <div className="flex items-center gap-1.5 mb-2.5">
-                  <h4 className={`text-[11px] font-bold uppercase tracking-wider ${isDarkMode?'text-gray-500':'text-gray-400'}`}>Fundamentals</h4>
-                  <Info size={10} className={isDarkMode?'text-gray-700':'text-gray-400'}/>
+            <div className="space-y-8 max-w-[400px] mx-auto">
+                {/* Fundamentals */}
+                <div>
+                    <div className="flex items-center justify-center gap-2 mb-5">
+                        <h4 className={`text-[12px] font-bold text-white`}>Fundamentals</h4>
+                        <Info size={12} className="text-gray-500"/>
+                    </div>
+                    <div className="flex items-center justify-center gap-6">
+                        <Ring segments={[
+                            {v: gfgStats?.easy||0, c:'#eab308'},
+                            {v: gfgStats?.medium||0, c:'#22c55e'},
+                            {v: gfgStats?.hard||0, c:'#ffffff'}
+                        ]} total={gfgStats?.totalProblemsSolved||0} center={gfgStats?.totalProblemsSolved||0} small={false}/>
+                        <div className="w-[180px] space-y-2">
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#4ade80]">GFG</span>
+                                <span className="text-[11px] font-bold text-white">{gfgStats?.totalProblemsSolved||0}</span>
+                            </div>
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#eab308]">HackerRank</span>
+                                <span className="text-[11px] font-bold text-white">26</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Ring segments={[
-                    {v: gfgStats.easy||0, c:'#22c55e'},
-                    {v: gfgStats.medium||0, c:'#f59e0b'},
-                    {v: gfgStats.hard||0, c:'#ef4444'},
-                  ]} total={gfgStats.totalProblemsSolved} center={gfgStats.totalProblemsSolved}/>
-                  <div className="flex-1 space-y-1.5">
-                    {[
-                      {label:'GFG', val:gfgStats.totalProblemsSolved, bg:isDarkMode?'bg-emerald-500/10':'bg-emerald-50', tc:'text-emerald-500'},
-                    ].map((r,i)=>(
-                      <div key={i} className={`flex justify-between px-3 py-1.5 rounded-xl ${r.bg}`}>
-                        <span className={`text-[11px] font-bold ${r.tc}`}>{r.label}</span>
-                        <span className={`text-[13px] font-black ${isDarkMode?'text-white':'text-gray-900'}`}>{r.val}</span>
-                      </div>
-                    ))}
-                  </div>
+
+                <div className="h-px w-full bg-white/10 my-4"/>
+
+                {/* DSA */}
+                <div>
+                    <div className="text-center mb-5">
+                        <h4 className={`text-[12px] font-bold text-white`}>DSA</h4>
+                    </div>
+                    <div className="flex items-center justify-center gap-6">
+                        <Ring segments={[
+                            {v:leetcodeStats?.easySolved||0, c:'#eab308'},
+                            {v:leetcodeStats?.mediumSolved||0, c:'#22c55e'},
+                            {v:leetcodeStats?.hardSolved||0, c:'#ef4444'}
+                        ]} total={leetcodeStats?.totalSolved||0} center={leetcodeStats?.totalSolved||0} small={false}/>
+                        <div className="w-[180px] space-y-2">
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#4ade80]">Easy</span>
+                                <span className="text-[11px] font-bold text-white">{leetcodeStats?.easySolved||0}</span>
+                            </div>
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#eab308]">Medium</span>
+                                <span className="text-[11px] font-bold text-white">{leetcodeStats?.mediumSolved||0}</span>
+                            </div>
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#ef4444]">Hard</span>
+                                <span className="text-[11px] font-bold text-white">{leetcodeStats?.hardSolved||0}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            ) : profileData.codingProfile?.geeksforgeeks && (
-              <div className="flex justify-center py-3"><div className="animate-spin rounded-full h-6 w-6 border-[3px] border-emerald-500/30 border-t-emerald-500"/></div>
-            )}
 
-            {gfgStats && leetcodeStats && <div className={`h-px ${isDarkMode?'bg-white/8':'bg-gray-100'}`}/>}
+                <div className="h-px w-full bg-white/10 my-4"/>
 
-            {/* DSA (LeetCode) */}
-            {leetcodeStats ? (
-              <div>
-                <h4 className={`text-[11px] font-bold uppercase tracking-wider mb-2.5 ${isDarkMode?'text-gray-500':'text-gray-400'}`}>DSA</h4>
-                <div className="flex items-center gap-3">
-                  <Ring segments={[
-                    {v:leetcodeStats.easySolved||0, c:'#14b8a6'},
-                    {v:leetcodeStats.mediumSolved||0, c:'#f59e0b'},
-                    {v:leetcodeStats.hardSolved||0, c:'#ef4444'},
-                  ]} total={leetcodeStats.totalSolved} center={leetcodeStats.totalSolved}/>
-                  <div className="flex-1 space-y-1.5">
-                    {[
-                      {label:'Easy', val:leetcodeStats.easySolved, bg:isDarkMode?'bg-teal-500/10':'bg-teal-50', tc:'text-teal-500'},
-                      {label:'Medium', val:leetcodeStats.mediumSolved, bg:isDarkMode?'bg-amber-500/10':'bg-amber-50', tc:'text-amber-500'},
-                      {label:'Hard', val:leetcodeStats.hardSolved, bg:isDarkMode?'bg-rose-500/10':'bg-rose-50', tc:'text-rose-500'},
-                    ].map((r,i)=>(
-                      <div key={i} className={`flex justify-between px-3 py-1.5 rounded-xl ${r.bg}`}>
-                        <span className={`text-[11px] font-bold ${r.tc}`}>{r.label}</span>
-                        <span className={`text-[13px] font-black ${isDarkMode?'text-white':'text-gray-900'}`}>{r.val}</span>
-                      </div>
-                    ))}
-                  </div>
+                {/* Competitive Programming */}
+                <div>
+                    <div className="text-center mb-5">
+                        <h4 className={`text-[12px] font-bold text-white`}>Competitive Programming</h4>
+                    </div>
+                    <div className="flex items-center justify-center gap-6">
+                         <Ring segments={[{v:codeforcesStats?.rating||0, c:'#4ade80'}]}
+                            total={Math.max(codeforcesStats?.maxRating||codeforcesStats?.rating||0,1)} center={codeforcesStats?.rating||0} small={false}/>
+                        <div className="w-[180px] space-y-2">
+                            <div className="flex justify-between px-3 py-2 bg-[#212126] rounded">
+                                <span className="text-[11px] font-bold text-[#4ade80]">Codechef</span>
+                                <span className="text-[11px] font-bold text-white">32</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            ) : profileData.codingProfile?.leetcode && (
-              <div className="flex justify-center py-3"><div className="animate-spin rounded-full h-6 w-6 border-[3px] border-amber-500/30 border-t-amber-500"/></div>
-            )}
-
-            {codeforcesStats && (leetcodeStats || gfgStats) && <div className={`h-px ${isDarkMode?'bg-white/8':'bg-gray-100'}`}/>}
-
-            {/* Competitive (CF) */}
-            {codeforcesStats ? (
-              <div>
-                <h4 className={`text-[11px] font-bold uppercase tracking-wider mb-2.5 ${isDarkMode?'text-gray-500':'text-gray-400'}`}>Competitive Programming</h4>
-                <div className="flex items-center gap-3">
-                  <Ring segments={[{v:codeforcesStats.rating||0, c:'#3b82f6'}]}
-                    total={Math.max(codeforcesStats.maxRating||codeforcesStats.rating,1)} center={codeforcesStats.rating}/>
-                  <div className="flex-1 space-y-1.5">
-                    {[
-                      {label:'Codeforces', val:codeforcesStats.rating, bg:isDarkMode?'bg-blue-500/10':'bg-blue-50', tc:'text-blue-500'},
-                      {label:'Max', val:codeforcesStats.maxRating, bg:isDarkMode?'bg-purple-500/10':'bg-purple-50', tc:'text-purple-500'},
-                    ].map((r,i)=>(
-                      <div key={i} className={`flex justify-between px-3 py-1.5 rounded-xl ${r.bg}`}>
-                        <span className={`text-[11px] font-bold ${r.tc}`}>{r.label}</span>
-                        <span className={`text-[13px] font-black ${getCodeforcesColor(r.val)}`}>{r.val}</span>
-                      </div>
-                    ))}
-                    <p className={`text-[10px] font-semibold capitalize px-1 ${isDarkMode?'text-gray-600':'text-gray-400'}`}>{getCodeforcesRankLabel(codeforcesStats.rating)}</p>
-                  </div>
-                </div>
-              </div>
-            ) : profileData.codingProfile?.codeforces && (
-              <div className="flex justify-center py-3"><div className="animate-spin rounded-full h-6 w-6 border-[3px] border-blue-500/30 border-t-blue-500"/></div>
-            )}
-
-            {!leetcodeStats && !gfgStats && !codeforcesStats && (
-              <div className="flex flex-col items-center justify-center py-8 opacity-40">
-                <Trophy size={24} className="mb-2 text-gray-400"/>
-                <p className={`text-[11px] text-center ${isDarkMode?'text-gray-400':'text-gray-500'}`}>Link coding profiles to see stats</p>
-              </div>
-            )}
-          </div>
+            </div>
         </div>
 
       </div>
