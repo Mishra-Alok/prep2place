@@ -99,8 +99,9 @@ export default function CodingProfile() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlTab = searchParams.get("tab") || 'details';
-  const [activeTab, setActiveTab] = useState(urlTab); // details, milestones, progress
-  const [tabHistory, setTabHistory] = useState([]); // internal tab history for Back button
+  const [activeTab, setActiveTab] = useState(urlTab);
+  const [tabHistory, setTabHistory] = useState([]);
+  const [isPublicProfile, setIsPublicProfile] = useState(true);
 
   // Sync state if URL changes directly
   useEffect(() => {
@@ -110,7 +111,20 @@ export default function CodingProfile() {
     }
   }, [searchParams]);
 
-  // Navigate to a tab and push current tab onto history stack
+  // Intercept browser back button — if editing, go back to dashboard view instead of leaving page
+  useEffect(() => {
+    const onPopState = (e) => {
+      if (isEditing) {
+        e.preventDefault();
+        window.history.pushState(null, '', window.location.href);
+        cancelEditRef.current?.();
+      }
+    };
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [isEditing]);
+
   const goToTab = (tab) => {
     if (tab === activeTab) return;
     setTabHistory(prev => [...prev, activeTab]);
@@ -118,7 +132,6 @@ export default function CodingProfile() {
     setSearchParams({ tab });
   };
 
-  // Go back: pop history or navigate away
   const handleBack = () => {
     if (tabHistory.length > 0) {
       const prev = tabHistory[tabHistory.length - 1];
@@ -129,8 +142,10 @@ export default function CodingProfile() {
       navigate(-1);
     }
   };
+
   const [isStatsOpen, setIsStatsOpen] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const cancelEditRef = useRef(null);
   const [editForm, setEditForm] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -469,6 +484,9 @@ export default function CodingProfile() {
     setEditForm(profileData);
     setIsEditing(false);
   };
+  // Keep a ref so the popstate handler can always access the latest cancelEdit
+  useEffect(() => { cancelEditRef.current = cancelEdit; });
+
 
   const handleRefreshAll = async () => {
     setIsRefreshing(true);
@@ -2077,10 +2095,15 @@ export default function CodingProfile() {
       <div className={`flex justify-between items-center px-5 py-4 border-b ${isDarkMode ? 'border-white/5' : 'border-gray-100'}`}>
         <div className="flex items-center gap-2.5">
           <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Public Profile</span>
-          <div className="w-9 h-5 bg-emerald-500 rounded-full relative flex-shrink-0 cursor-pointer">
-            <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" />
-          </div>
+          <button
+            onClick={() => setIsPublicProfile(v => !v)}
+            className={`w-9 h-5 rounded-full relative flex-shrink-0 transition-colors duration-300 ${isPublicProfile ? 'bg-emerald-500' : isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}
+            title={isPublicProfile ? 'Profile is Public — click to make Private' : 'Profile is Private — click to make Public'}
+          >
+            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${isPublicProfile ? 'right-0.5' : 'left-0.5'}`} />
+          </button>
         </div>
+
         <button
           onClick={handleRefreshAll}
           disabled={isRefreshing}
@@ -2398,7 +2421,7 @@ export default function CodingProfile() {
         </div>
         <div className={`flex justify-between items-center text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
           <span className="font-medium">Profile Visibility</span>
-          <span className="font-bold text-emerald-500">Public</span>
+          <span className={`font-bold ${isPublicProfile ? 'text-emerald-500' : isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{isPublicProfile ? 'Public' : 'Private'}</span>
         </div>
       </div>
     </div>
@@ -2777,48 +2800,79 @@ export default function CodingProfile() {
 
 
 
-  // --- New Render Layout ---
+
+  // --- Main Render ---
   return (
-    <div className={`min-h-[calc(100vh-4rem)] w-full font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0A0A0A] text-white' : 'bg-[#FAFAFA] text-slate-900'}`}>
-      <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
-        
-        {/* Top Actions Bar */}
-        <div className="flex justify-start mb-6 w-full">
-           {isEditing ? (
-              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-2xl bg-black/80 dark:bg-white/10 border border-white/20 animate-slideUp">
-                <p className="text-sm font-medium text-white flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-pulse"></span>
-                  Unsaved Changes
-                </p>
-                <div className="w-px h-6 bg-white/20"></div>
-                <div className="flex items-center gap-3">
-                  <button onClick={cancelEdit} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors">Discard</button>
-                  <button onClick={handleSaveProfile} className="px-5 py-2 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-200 transition-colors">Save Now</button>
+    <div className={`min-h-[calc(100vh-4rem)] w-full font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0d0d14] text-white' : 'bg-[#f4f4f8] text-slate-900'}`}>
+      <div className="max-w-[1400px] mx-auto px-4 py-6 md:px-6 md:py-8">
+
+        {isEditing ? (
+          /* ====== EDIT MODE ====== */
+          <div className="animate-fadeIn">
+            {/* Edit Header */}
+            <div className={`flex items-center justify-between mb-6 p-4 rounded-2xl border ${isDarkMode ? 'bg-[#141419] border-white/5' : 'bg-white border-gray-200 shadow-sm'}`}>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={cancelEdit}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'}`}
+                  title="Back to Profile"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M19 12H5M12 5l-7 7 7 7"/>
+                  </svg>
+                </button>
+                <div>
+                  <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Edit Profile</h2>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Changes are saved when you click "Save"</p>
                 </div>
               </div>
-           ) : (
-             <button onClick={() => setIsEditing(true)} className={`px-5 py-2 rounded-xl text-sm font-bold border transition-all ${isDarkMode ? 'border-gray-700 bg-[#141419] text-white hover:bg-white/10' : 'border-gray-300 bg-white text-gray-900 shadow-sm hover:bg-gray-50'}`}>
-               <Edit2 size={16} className="inline mr-2" /> Edit Profile
-             </button>
-           )}
-        </div>
-        
-        {/* Main Layout Area */}
-        {isEditing ? (
-           <div className="animate-fadeIn max-w-4xl mx-auto">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={cancelEdit}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${isDarkMode ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveProfile}
+                  className="px-5 py-2 rounded-xl text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20"
+                >
+                  Save Profile
+                </button>
+              </div>
+            </div>
+            <div className="max-w-4xl mx-auto">
               {renderProfileDetailsTab()}
-           </div>
+            </div>
+          </div>
         ) : (
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative">
-            {/* Left Sidebar - Fixed Width */}
-            <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
-               {renderCodolioSidebar()}
+          /* ====== VIEW / DASHBOARD MODE ====== */
+          <div className="flex flex-col lg:flex-row gap-5 items-start">
+
+            {/* Left Sidebar */}
+            <div className="w-full lg:w-72 xl:w-80 flex-shrink-0 lg:sticky lg:top-6">
+              {renderCodolioSidebar()}
             </div>
-            
-            {/* Main Content Dashboard */}
-            <div className="flex-1 min-w-0">
-               {renderCodolioDashboard()}
+
+            {/* Main Content */}
+            <div className="flex-1 min-w-0 flex flex-col gap-5">
+              {/* Edit Profile Button */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
+                    isDarkMode
+                      ? 'border-white/10 bg-[#141419] text-gray-300 hover:text-white hover:bg-white/10'
+                      : 'border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-gray-50'
+                  }`}
+                >
+                  <Edit2 size={14} strokeWidth={2.5} />
+                  Edit Profile
+                </button>
+              </div>
+              {renderCodolioDashboard()}
             </div>
+
           </div>
         )}
       </div>
