@@ -32,7 +32,8 @@ import {
   Camera as CameraIcon,
   LayoutTemplate,
   Activity,
-  User as UserIcon
+  User as UserIcon,
+  Database
 } from "lucide-react";
 import pp from "../assets/pp.png";
 
